@@ -1,2 +1,2 @@
 #!/bin/sh
-python3 game.py;
+python3 main.py 50 12;

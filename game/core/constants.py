@@ -1,0 +1,11 @@
+import enum
+
+WINDOW_WIDTH, WINDOW_HEIGHT = (800, 800)
+DEFAULT_DIM, DEFAULT_BOMB_COUNT = 50, 12
+
+
+# game states
+class GAME_STATE(enum.Enum):
+    RUNNING = 0
+    WAITING_FOR_INPUT = 1
+    STOPPED = 2
