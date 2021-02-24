@@ -11,16 +11,18 @@ from game.core import agent, ui
 # Arguments
 parser = argparse.ArgumentParser(description="Options")
 # Add Arguments
-parser.add_argument("dim", help="dimension of the grid", default=DEFAULT_DIM)
-parser.add_argument("bomb_count", help="number of bombs to be placed randomly in the grid", default=DEFAULT_BOMB_COUNT)
+parser.add_argument("dim", help="dimension of the grid",
+                    default=DEFAULT_DIM, type=int)
+parser.add_argument(
+    "bomb_count", help="number of bombs to be placed randomly in the grid", default=DEFAULT_BOMB_COUNT, type=int)
 
 args = parser.parse_args()
 
 
 # Initialize things and return a new instance of Board
 def init() -> Board:
-    ui.init_window()
-    return Board(dim=args.dim, bomb_count=args.bomb_count)
+    screen = ui.init_window()
+    return Board(dim=args.dim, bomb_count=args.bomb_count, screen=screen)
 
 
 board = init()
@@ -33,5 +35,6 @@ while game_state != GAME_STATE.STOPPED:
     for event in pygame.event.get():
         if event.type == QUIT:
             game_state = GAME_STATE.STOPPED
+        board.draw()
 
     pygame.display.flip()

@@ -10,6 +10,7 @@ from .constants import WINDOW_WIDTH, WINDOW_HEIGHT
 def init_window():
     screen = pygame.display.set_mode((WINDOW_WIDTH, WINDOW_HEIGHT))
     pygame.display.set_caption('MineSweeper')
+    return screen
 
 
 def event_handler(event):
