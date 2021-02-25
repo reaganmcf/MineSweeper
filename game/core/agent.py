@@ -1,4 +1,5 @@
 import pygame
+from .constants import WINDOW_WIDTH, WINDOW_HEIGHT
 
 
 class Agent:
@@ -10,17 +11,45 @@ class Agent:
         # tile width is passed in so we know how large to make the agent
         self._tile_width = tile_width
 
+    """
+    BEGIN AI SPECIFIC FUNCTIONS
+
+    The AI should ONLY be interacting with the following functions
+    """
+
+    def moveUp(self):
+        # Make sure we don't go off screen
+        self._y = max(0, self._y - self._tile_width)
+
+    def moveDown(self):
+        # Make sure we don't go off screen
+        self._y = min(WINDOW_HEIGHT - self._tile_width,
+                      self._y + self._tile_width)
+
+    def moveLeft(self):
+        # Make sure we don't go off screen
+        self._x = max(0, self._x - self._tile_width)
+
+    def moveRight(self):
+        # Make sure we don't go off screen
+        self._x = min(WINDOW_WIDTH - self._tile_width,
+                      self._x + self._tile_width)
+
+    """
+    END AI SPECIFIC FUNCTIONS
+    """
+
     @property
-    def x(self):
+    def x_pixel(self):
         """
-        Returns x position of the agent
+        Returns x PIXEL position of the agent
         """
         return self._x
 
     @property
-    def y(self):
+    def y_pixel(self):
         """
-        Returns y position of the agent
+        Returns y PIXEL position of the agent
         """
         return self._y
 

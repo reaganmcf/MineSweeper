@@ -20,7 +20,7 @@ args = parser.parse_args()
 
 
 # Initialize things and return a new instance of Board
-def init() -> Board:
+def init():
     screen = pygame.display.set_mode((WINDOW_WIDTH, WINDOW_HEIGHT))
     pygame.display.set_caption('MineSweeper')
 
@@ -38,8 +38,17 @@ game_state: GAME_STATE = GAME_STATE.RUNNING
 while game_state != GAME_STATE.STOPPED:
     clock.tick(60)
     for event in pygame.event.get():
-        if event.type == QUIT:
+        if event.type == QUIT:  # Close Window
             game_state = GAME_STATE.STOPPED
+        elif event.type == pygame.KEYDOWN:  # Keyboard Presses
+            if event.key == pygame.K_DOWN:
+                agent.moveDown()
+            elif event.key == pygame.K_UP:
+                agent.moveUp()
+            elif event.key == pygame.K_LEFT:
+                agent.moveLeft()
+            elif event.key == pygame.K_RIGHT:
+                agent.moveRight()
 
         board.screen.fill(BACKGROUND_COLOR)
         board.draw()
