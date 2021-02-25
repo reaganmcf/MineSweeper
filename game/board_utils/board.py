@@ -1,17 +1,17 @@
 from .board_tile import BoardTile
-from ..core.constants import TILES
+from ..core.constants import TILES, GAME_STATE
 import pygame
 import numpy as np
 
 
 class Board:
-    def __init__(self, dim: int, bomb_count: int, screen: any, tile_width: float):
+    def __init__(self, dim: int, bomb_count: int, screen: any, tile_width: float, game_state: GAME_STATE):
         self._dim = dim
         self._bomb_count = bomb_count
         self._tiles = [[]]
         self._screen = screen
         self._tile_width = tile_width
-
+        self._game_state = game_state
         self.init_tiles()
 
     @property
@@ -48,6 +48,19 @@ class Board:
         Return the width of a tile for the board (precalculated on initialization)
         """
         return self._tile_width
+    
+    @property
+    def game_state(self):
+        """
+        Return the current game state
+        """
+        return self._game_state
+    
+    def set_game_state(self, new_game_state: GAME_STATE):
+        """
+        Set the game state
+        """
+        self._game_state = new_game_state
 
     def init_tiles(self):
         """
@@ -83,8 +96,6 @@ class Board:
                         num_mines += 1     
             # update tile type
             self._tiles[i][j].set_type(TILES(num_mines))
-
-
 
         self._tiles[i][j].open()
 

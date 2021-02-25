@@ -19,6 +19,8 @@ parser.add_argument(
 
 args = parser.parse_args()
 
+# Game clock and event loop as well as game_state
+clock = pygame.time.Clock()
 
 # Initialize things and return a new instance of Board
 def init():
@@ -27,35 +29,39 @@ def init():
 
     # Calculate the width of a tile
     CELL_WIDTH = int((WINDOW_WIDTH) / args.dim)
-    return Board(dim=args.dim, bomb_count=args.bomb_count, screen=screen, tile_width=CELL_WIDTH)
-
+    return Board(dim=args.dim, bomb_count=args.bomb_count, screen=screen, tile_width=CELL_WIDTH, game_state=GAME_STATE.RUNNING)
 
 board = init()
 agent = Agent(i=0, j=0, screen=board.screen, board=board)
-
-# Game clock and event loop
-clock = pygame.time.Clock()
-game_state: GAME_STATE = GAME_STATE.RUNNING
 
 # debug flags
 dbg_show_bombs = False
 
 # Start AI Thread
 import game.ai_utils.ai as ai
-ai_thread = Thread(target = ai.start)
+ai_thread = Thread(target = ai.start, args=(board,))
 ai_thread.start()
 
-while game_state != GAME_STATE.STOPPED:
+while board.game_state != GAME_STATE.STOPPED:
     clock.tick(60)
     for event in pygame.event.get():
-        if event.type == QUIT:  # Close Window
-            game_state = GAME_STATE.STOPPED
-        # Custom Events from AI
+        # Close Window
+        if event.type == QUIT:
+            board.set_game_state(GAME_STATE.STOPPED)
+            ai_thread.join()
+ 
+        # Custom Event Handlers from AI
         elif event == EVENT_MOVE_UP:
             agent.move_up()
         elif event == EVENT_MOVE_DOWN:
             agent.move_down()
-        elif event.type == pygame.KEYDOWN:  # Keyboard Presses
+        elif event == EVENT_MOVE_LEFT:
+            agent.move_left()
+        elif event == EVENT_MOVE_RIGHT:
+            agent.move_right()
+
+        # Keyboard Press Events
+        elif event.type == pygame.KEYDOWN:
             if event.key == pygame.K_DOWN:
                 agent.move_down()
             elif event.key == pygame.K_UP:
