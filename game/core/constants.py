@@ -3,15 +3,13 @@ import pygame
 import os
 
 # debug flags
+# these are different than the debugging commands, which are basically toggling these features
 DEBUG__SHOW_TILES = False # show tile states even when they are still closed
-
 
 
 WINDOW_WIDTH, WINDOW_HEIGHT = (800, 800)
 DEFAULT_DIM, DEFAULT_BOMB_COUNT = 10, 12
-
-
-BACKGROUND_COLOR = pygame.Color(192, 192, 192)
+BACKGROUND_COLOR = pygame.Color(29,31,33)
 
 
 # game states
@@ -22,10 +20,8 @@ class GAME_STATE(enum.Enum):
 
 
 # assets
-SPRITESHEET_PATH = os.path.join(os.path.dirname(__file__),
-                                "../../assets/SpriteSheet.png")
-SPRITESHEET_CELL_WIDTH = 32
-
+MINE_IMG = pygame.image.load(os.path.join(os.path.dirname(__file__), "../../assets/bomb.png"))
+MINE_RECT = MINE_IMG.get_rect()
 
 # board tiles
 class TILES(enum.Enum):
@@ -47,12 +43,3 @@ class TILES(enum.Enum):
         """
         return [TILES.MINE, TILES.UNOPENED, TILES.ZERO, TILES.ONE, TILES.TWO, TILES.THREE, TILES.FOUR, TILES.FIVE, TILES.SIX, TILES.SEVEN, TILES.EIGHT]
 
-    def get_sprite_coords_for_tile(tile):
-        """
-        Returns (x,y,width,height) for a given tile representing the sprite image location and width/height
-        """
-
-        if tile == TILES.MINE:
-            return ((32, 0, 32, 32))  # MINE SPRITE
-        else:
-            return ((0, 0, 32, 32))  # NULL SPRITE

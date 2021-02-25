@@ -77,4 +77,4 @@ class Agent:
         # Center (inplace) the agent rectangle
         rect.move_ip(self._tile_width * 0.1, self._tile_width * .1)
         # Draw the agent
-        pygame.draw.rect(self._screen, '#000000', rect, 5)
+        pygame.draw.rect(self._screen, 'orange', rect, 5)

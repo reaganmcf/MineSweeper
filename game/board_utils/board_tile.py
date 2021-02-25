@@ -1,4 +1,4 @@
-from ..core.constants import TILES, DEBUG__SHOW_TILES
+from ..core.constants import TILES, DEBUG__SHOW_TILES, MINE_IMG
 import pygame
 import os
 
@@ -49,15 +49,18 @@ class BoardTile:
 
     def get_component(self, tile_width: int, dbg_show_bombs: bool = False) -> tuple:
         """ 
-        Return a tuple (color, pygame.Rect, lineWidth) of the given tile and return it to be rendered by the board
+        Return a tuple (color, pygame.Rect, lineWidth, image) of the given tile and return it to be rendered by the board
         """
-        color = '#ffffff'
+        
+        color = 'black'
         rect = pygame.Rect(self._i * tile_width, self._j * tile_width, tile_width, tile_width)
         width = 1
+        image = None
 
         if self._is_open or DEBUG__SHOW_TILES or dbg_show_bombs:
             if self._tile == TILES.MINE:
                 color = 'red'
                 width = 10
-    
-        return color, rect, width
+                image = pygame.transform.scale(MINE_IMG, (tile_width, tile_width))
+        
+        return color, rect, width, image

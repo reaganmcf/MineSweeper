@@ -1,6 +1,5 @@
 from .board_tile import BoardTile
-from ..core.constants import TILES, SPRITESHEET_PATH
-from .sprite_sheet import SpriteSheet
+from ..core.constants import TILES
 import pygame
 import numpy as np
 
@@ -12,9 +11,6 @@ class Board:
         self._tiles = [[]]
         self._screen = screen
         self._tile_width = tile_width
-
-        # init sprite sheet
-        self._spritesheet = SpriteSheet(SPRITESHEET_PATH)
 
         self.init_tiles()
 
@@ -82,5 +78,8 @@ class Board:
         """
         for tile_row in self._tiles:
             for tile in tile_row:
-                color, rect, width = tile.get_component(self._tile_width, dbg_show_bombs=dbg_show_bombs)
-                pygame.draw.rect(self._screen, color, rect, width)
+                color, rect, line_width, image = tile.get_component(self._tile_width, dbg_show_bombs=dbg_show_bombs)
+                if image:
+                    self._screen.blit(image, rect)
+                else:
+                    pygame.draw.rect(self._screen, color, rect, line_width)

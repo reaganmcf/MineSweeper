@@ -25,7 +25,7 @@ def init():
     pygame.display.set_caption('MineSweeper')
 
     # Calculate the width of a tile
-    CELL_WIDTH = (WINDOW_WIDTH) / args.dim
+    CELL_WIDTH = int((WINDOW_WIDTH) / args.dim)
     return Board(dim=args.dim, bomb_count=args.bomb_count, screen=screen, tile_width=CELL_WIDTH)
 
 
@@ -59,6 +59,8 @@ while game_state != GAME_STATE.STOPPED:
             # debug commands
             elif event.key == pygame.K_s: # show bombs while holding down
                 dbg_show_bombs = True
+            elif event.key == pygame.K_r: # reinitialize the board
+                board.init_tiles()
 
         elif event.type == pygame.KEYUP:
             # turn off debug commands

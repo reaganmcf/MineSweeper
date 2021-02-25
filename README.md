@@ -4,7 +4,8 @@
 
 |Key|       Function             |
 |---|----------------------------|
-|`S`|Hold down to highlight bombs|
+|`s`|Hold down to highlight bombs|
+|`r`|Re-initialize board tiles   |
 
 ---
 
