@@ -2,6 +2,11 @@ import enum
 import pygame
 import os
 
+# debug flags
+DEBUG__SHOW_TILES = False # show tile states even when they are still closed
+
+
+
 WINDOW_WIDTH, WINDOW_HEIGHT = (800, 800)
 DEFAULT_DIM, DEFAULT_BOMB_COUNT = 10, 12
 

@@ -1,15 +1,19 @@
 import pygame
 from .constants import WINDOW_WIDTH, WINDOW_HEIGHT
+from ..board_utils.board import Board
 
 
 class Agent:
-    def __init__(self, x: int, y: int,  screen: any, tile_width: int, ):
-        self._screen = screen
-        self._x = x
-        self._y = y
+    def __init__(self, i: int, j: int,  screen: any, board: Board):
+        # index of where the agent is 
+        self._i = 0
+        self._j = 0
+
+        self._screen = screen    
+        self._board = board
 
         # tile width is passed in so we know how large to make the agent
-        self._tile_width = tile_width
+        self._tile_width = board.tile_width
 
     """
     BEGIN AI SPECIFIC FUNCTIONS
@@ -17,41 +21,43 @@ class Agent:
     The AI should ONLY be interacting with the following functions
     """
 
-    def moveUp(self):
+    def move_up(self):
         # Make sure we don't go off screen
-        self._y = max(0, self._y - self._tile_width)
+        self._j = max(0, self._j - 1)
 
-    def moveDown(self):
+    def move_down(self):
         # Make sure we don't go off screen
-        self._y = min(WINDOW_HEIGHT - self._tile_width,
-                      self._y + self._tile_width)
+        self._j = min(self._board.dim-1, self._j + 1)
+    
+    def move_left(self):
+        # Make sure we don't go off screen
+        self._i = max(0, self._i - 1)
 
-    def moveLeft(self):
+    def move_right(self):
         # Make sure we don't go off screen
-        self._x = max(0, self._x - self._tile_width)
+        self._i = min(self._board.dim-1, self._i+1)    
 
-    def moveRight(self):
-        # Make sure we don't go off screen
-        self._x = min(WINDOW_WIDTH - self._tile_width,
-                      self._x + self._tile_width)
+    def open_tile(self):
+        # interact with current tile and change its state
+        self._board.open_tile()
 
     """
     END AI SPECIFIC FUNCTIONS
     """
 
     @property
-    def x_pixel(self):
+    def i(self):
         """
-        Returns x PIXEL position of the agent
+        Returns i index of where the agent is in the board    
         """
-        return self._x
+        return self._i
 
     @property
-    def y_pixel(self):
+    def j(self):
         """
-        Returns y PIXEL position of the agent
+        Returns j index of where the agent is in the board
         """
-        return self._y
+        return self._j
 
     @property
     def screen(self):
@@ -60,18 +66,6 @@ class Agent:
         """
         return self._screen
 
-    def set_x(self, new_x: int):
-        """
-        Set x position of the agent
-        """
-        self._x = new_x
-
-    def set_y(self, new_y: int):
-        """
-        Set y position of the agent
-        """
-        self._y = new_y
-
     def draw(self):
         """
         Returns pygame rect to draw on the screen
@@ -79,7 +73,7 @@ class Agent:
         # Agent is 80% the size of a tile
         agent_width = self._tile_width * 0.8
         # Create agent rectangle (can use sprites later)
-        rect = pygame.Rect(self._x, self._y, agent_width, agent_width)
+        rect = pygame.Rect(self._i * self._tile_width, self._j * self._tile_width, agent_width, agent_width)
         # Center (inplace) the agent rectangle
         rect.move_ip(self._tile_width * 0.1, self._tile_width * .1)
         # Draw the agent

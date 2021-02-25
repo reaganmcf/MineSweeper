@@ -2,6 +2,7 @@ from .board_tile import BoardTile
 from ..core.constants import TILES, SPRITESHEET_PATH
 from .sprite_sheet import SpriteSheet
 import pygame
+import numpy as np
 
 
 class Board:
@@ -61,11 +62,25 @@ class Board:
             for j in range(self._dim)
         ]
 
+        # place bombs randomly
+        bombs_left = self._bomb_count
+        while bombs_left > 0:
+            rand_i, rand_j = np.random.randint(0, self._dim), np.random.randint(0, self._dim)
+            if self._tiles[rand_i][rand_j].type == TILES.UNOPENED:
+                self._tiles[rand_i][rand_j].set_type(TILES.MINE)
+                bombs_left -= 1
+
+    def open_tile(i: int, j: int):
+        """
+        Open (or interact with) a tile at a given index
+        """
+        self._tiles[i][j].open(i,j)
+
     def draw(self):
         """
         Draw board state on pygame window
         """
         for tile_row in self._tiles:
             for tile in tile_row:
-                pygame.draw.rect(self._screen, '#ffffff',
-                                 tile.get_component(self._tile_width), 1)
+                color, rect, width = tile.get_component(self._tile_width)
+                pygame.draw.rect(self._screen, color, rect, width)

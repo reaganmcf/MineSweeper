@@ -30,7 +30,7 @@ def init():
 
 
 board = init()
-agent = Agent(x=0, y=0, screen=board.screen, tile_width=board.tile_width)
+agent = Agent(i=0, j=0, screen=board.screen, board=board)
 
 # Game clock and event loop
 clock = pygame.time.Clock()
@@ -42,13 +42,15 @@ while game_state != GAME_STATE.STOPPED:
             game_state = GAME_STATE.STOPPED
         elif event.type == pygame.KEYDOWN:  # Keyboard Presses
             if event.key == pygame.K_DOWN:
-                agent.moveDown()
+                agent.move_down()
             elif event.key == pygame.K_UP:
-                agent.moveUp()
+                agent.move_up()
             elif event.key == pygame.K_LEFT:
-                agent.moveLeft()
+                agent.move_left()
             elif event.key == pygame.K_RIGHT:
-                agent.moveRight()
+                agent.move_right()
+            elif event.key == pygame.K_RETURN:
+                agent.open_tile()
 
         board.screen.fill(BACKGROUND_COLOR)
         board.draw()
