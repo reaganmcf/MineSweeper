@@ -1,4 +1,4 @@
-from ..core.constants import TILES, DEBUG__SHOW_TILES, MINE_IMG, FLAG_IMG
+from ..core.constants import TILES, DEBUG__SHOW_TILES, MINE_IMG, FLAG_IMG, ZERO_IMG, ONE_IMG, TWO_IMG, THREE_IMG, FOUR_IMG, FIVE_IMG, SIX_IMG, SEVEN_IMG, EIGHT_IMG
 import pygame
 import os
 
@@ -42,13 +42,13 @@ class BoardTile:
         Return whether or not the tile has a flag on it
         """
         return self._is_flagged
-    
+
     def open(self):
         """
         Open a tile
         """
-        self._is_open = True 
-    
+        self._is_open = True
+        
     def toggle_flag(self):
         """
         Toggle the flag status of a cell
@@ -62,10 +62,10 @@ class BoardTile:
         self._tile = new_type
 
     def get_component(self, tile_width: int, dbg_show_bombs: bool = False) -> tuple:
-        """ 
+        """
         Return a tuple (color, pygame.Rect, lineWidth, image) of the given tile and return it to be rendered by the board
         """
-        
+
         color = 'black'
         rect = pygame.Rect(self._i * tile_width, self._j * tile_width, tile_width, tile_width)
         width = 1
@@ -75,9 +75,26 @@ class BoardTile:
             # render mine on tile
             if self._tile == TILES.MINE:
                 image = pygame.transform.scale(MINE_IMG, (tile_width, tile_width))
-        
+            elif self._tile == TILES.ZERO:
+                image = pygame.transform.scale(ZERO_IMG, (tile_width, tile_width))
+            elif self._tile == TILES.ONE:
+                image = pygame.transform.scale(ONE_IMG, (tile_width, tile_width))
+            elif self._tile == TILES.TWO:
+                image = pygame.transform.scale(TWO_IMG, (tile_width, tile_width))
+            elif self._tile == TILES.THREE:
+                image = pygame.transform.scale(THREE_IMG, (tile_width, tile_width))
+            elif self._tile == TILES.FOUR:
+                image = pygame.transform.scale(FOUR_IMG, (tile_width, tile_width))
+            elif self._tile == TILES.FIVE:
+                image = pygame.transform.scale(FIVE_IMG, (tile_width, tile_width))
+            elif self._tile == TILES.SIX:
+                image = pygame.transform.scale(SIX_IMG, (tile_width, tile_width))
+            elif self._tile == TILES.SEVEN:
+                image = pygame.transform.scale(SEVEN_IMG, (tile_width, tile_width))
+            elif self._tile == TILES.EIGHT:
+                image = pygame.transform.scale(EIGHT_IMG, (tile_width, tile_width))
         # render flag on tile
         elif not self._is_open and self._is_flagged:
-            image = pygame.transform.scale(FLAG_IMG,(tile_width, tile_width))
+            image = pygame.transform.scale(FLAG_IMG, (tile_width, tile_width))
 
         return color, rect, width, image

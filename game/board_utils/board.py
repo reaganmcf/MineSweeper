@@ -70,6 +70,20 @@ class Board:
         """
         Open (or interact with) a tile at a given index
         """
+
+        # calculate the new tile type by checking adjacent neighbors
+        if self._tiles[i][j].type != TILES.MINE:
+            dirs = [(-1,-1),(-1,0),(-1,1),(0,-1),(0,1),(1,-1),(1,0),(1,1)]
+            num_mines = 0
+            for dx,dy in dirs:
+                nx,ny = i + dx, j + dy
+                # check bounds
+                if 0 <= nx and nx < self._dim and 0 <= ny and ny < self._dim:
+                    if self._tiles[nx][ny].type == TILES.MINE:
+                        num_mines += 1     
+            # update tile type
+            self._tiles[i][j].set_type(TILES(num_mines))
+
         self._tiles[i][j].open()
 
     def flag_tile(self, i: int, j: int):
