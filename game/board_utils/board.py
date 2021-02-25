@@ -84,6 +84,8 @@ class Board:
             # update tile type
             self._tiles[i][j].set_type(TILES(num_mines))
 
+
+
         self._tiles[i][j].open()
 
     def flag_tile(self, i: int, j: int):

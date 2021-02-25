@@ -1,9 +1,10 @@
 import sys
 import argparse
 import pygame
-from pygame.locals import QUIT
+from threading import Thread
 
-from game.core.constants import DEFAULT_DIM, DEFAULT_BOMB_COUNT, GAME_STATE, WINDOW_WIDTH, WINDOW_HEIGHT, BACKGROUND_COLOR
+from pygame.locals import QUIT
+from game.core.constants import DEFAULT_DIM, DEFAULT_BOMB_COUNT, GAME_STATE, WINDOW_WIDTH, WINDOW_HEIGHT, BACKGROUND_COLOR, EVENT_MOVE_UP, EVENT_MOVE_DOWN, EVENT_MOVE_LEFT, EVENT_MOVE_RIGHT
 from game.board_utils.board import Board
 from game.core.agent import Agent
 
@@ -39,11 +40,21 @@ game_state: GAME_STATE = GAME_STATE.RUNNING
 # debug flags
 dbg_show_bombs = False
 
+# Start AI Thread
+import game.ai_utils.ai as ai
+ai_thread = Thread(target = ai.start)
+ai_thread.start()
+
 while game_state != GAME_STATE.STOPPED:
     clock.tick(60)
     for event in pygame.event.get():
         if event.type == QUIT:  # Close Window
             game_state = GAME_STATE.STOPPED
+        # Custom Events from AI
+        elif event == EVENT_MOVE_UP:
+            agent.move_up()
+        elif event == EVENT_MOVE_DOWN:
+            agent.move_down()
         elif event.type == pygame.KEYDOWN:  # Keyboard Presses
             if event.key == pygame.K_DOWN:
                 agent.move_down()

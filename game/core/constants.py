@@ -4,13 +4,19 @@ import os
 
 # debug flags
 # these are different than the debugging commands, which are basically toggling these features
-DEBUG__SHOW_TILES = False # show tile states even when they are still closed
+DEBUG__SHOW_TILES = False  # show tile states even when they are still closed
 
 
 WINDOW_WIDTH, WINDOW_HEIGHT = (800, 800)
 DEFAULT_DIM, DEFAULT_BOMB_COUNT = 10, 12
-BACKGROUND_COLOR = pygame.Color(29,31,33)
+BACKGROUND_COLOR = pygame.Color(29, 31, 33)
 
+
+# Custom PyGame Events for the AI to send 
+EVENT_MOVE_UP = pygame.event.Event(pygame.USEREVENT, attr1="EVENT_MOVE_UP")
+EVENT_MOVE_DOWN = pygame.event.Event(pygame.USEREVENT, attr1="EVENT_MOVE_DOWN")
+EVENT_MOVE_LEFT = pygame.event.Event(pygame.USEREVENT, attr1="EVENT_MOVE_LEFT")
+EVENT_MOVE_RIGHT = pygame.event.Event(pygame.USEREVENT, attr1="EVENT_MOVE_RIGHT")
 
 # game states
 class GAME_STATE(enum.Enum):
@@ -20,17 +26,28 @@ class GAME_STATE(enum.Enum):
 
 
 # assets
-MINE_IMG = pygame.image.load(os.path.join(os.path.dirname(__file__), "../../assets/bomb.png"))
-FLAG_IMG = pygame.image.load(os.path.join(os.path.dirname(__file__), "../../assets/flag.png"))
-ZERO_IMG = pygame.image.load(os.path.join(os.path.dirname(__file__), "../../assets/zero.png"))
-ONE_IMG = pygame.image.load(os.path.join(os.path.dirname(__file__), "../../assets/one.png"))
-TWO_IMG = pygame.image.load(os.path.join(os.path.dirname(__file__), "../../assets/two.png"))
-THREE_IMG = pygame.image.load(os.path.join(os.path.dirname(__file__), "../../assets/three.png"))
-FOUR_IMG = pygame.image.load(os.path.join(os.path.dirname(__file__), "../../assets/four.png"))
-FIVE_IMG = pygame.image.load(os.path.join(os.path.dirname(__file__), "../../assets/five.png"))
-SIX_IMG = pygame.image.load(os.path.join(os.path.dirname(__file__), "../../assets/six.png"))
-SEVEN_IMG = pygame.image.load(os.path.join(os.path.dirname(__file__), "../../assets/seven.png"))
-EIGHT_IMG = pygame.image.load(os.path.join(os.path.dirname(__file__), "../../assets/eight.png"))
+MINE_IMG = pygame.image.load(os.path.join(
+    os.path.dirname(__file__), "../../assets/bomb.png"))
+FLAG_IMG = pygame.image.load(os.path.join(
+    os.path.dirname(__file__), "../../assets/flag.png"))
+ZERO_IMG = pygame.image.load(os.path.join(
+    os.path.dirname(__file__), "../../assets/zero.png"))
+ONE_IMG = pygame.image.load(os.path.join(
+    os.path.dirname(__file__), "../../assets/one.png"))
+TWO_IMG = pygame.image.load(os.path.join(
+    os.path.dirname(__file__), "../../assets/two.png"))
+THREE_IMG = pygame.image.load(os.path.join(
+    os.path.dirname(__file__), "../../assets/three.png"))
+FOUR_IMG = pygame.image.load(os.path.join(
+    os.path.dirname(__file__), "../../assets/four.png"))
+FIVE_IMG = pygame.image.load(os.path.join(
+    os.path.dirname(__file__), "../../assets/five.png"))
+SIX_IMG = pygame.image.load(os.path.join(
+    os.path.dirname(__file__), "../../assets/six.png"))
+SEVEN_IMG = pygame.image.load(os.path.join(
+    os.path.dirname(__file__), "../../assets/seven.png"))
+EIGHT_IMG = pygame.image.load(os.path.join(
+    os.path.dirname(__file__), "../../assets/eight.png"))
 
 
 # board tiles
@@ -52,4 +69,3 @@ class TILES(enum.Enum):
         Returns board tiles as list, so you can check if they are one of the valid types above
         """
         return [TILES.MINE, TILES.UNOPENED, TILES.ZERO, TILES.ONE, TILES.TWO, TILES.THREE, TILES.FOUR, TILES.FIVE, TILES.SIX, TILES.SEVEN, TILES.EIGHT]
-
