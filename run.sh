@@ -1,2 +1,2 @@
 #!/bin/sh
-python3 main.py 50 12;
+python3 main.py 10 12
