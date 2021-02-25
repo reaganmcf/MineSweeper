@@ -72,6 +72,12 @@ class Board:
         """
         self._tiles[i][j].open()
 
+    def flag_tile(self, i: int, j: int):
+        """
+        Toggle the flag status for a tile at a given index 
+        """
+        self._tiles[i][j].toggle_flag()
+
     def draw(self, dbg_show_bombs: bool = False):
         """
         Draw board state on pygame window

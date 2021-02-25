@@ -41,6 +41,10 @@ class Agent:
         # interact with current tile and change its state
         self._board.open_tile(self._j, self._i)
 
+    def flag_tile(self):
+        # interact with current tile and flag it
+        self._board.flag_tile(self._j, self._i)
+
     """
     END AI SPECIFIC FUNCTIONS
     """

@@ -21,7 +21,7 @@ class GAME_STATE(enum.Enum):
 
 # assets
 MINE_IMG = pygame.image.load(os.path.join(os.path.dirname(__file__), "../../assets/bomb.png"))
-MINE_RECT = MINE_IMG.get_rect()
+FLAG_IMG = pygame.image.load(os.path.join(os.path.dirname(__file__), "../../assets/flag.png"))
 
 # board tiles
 class TILES(enum.Enum):

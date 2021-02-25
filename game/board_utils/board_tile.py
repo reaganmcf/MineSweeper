@@ -1,4 +1,4 @@
-from ..core.constants import TILES, DEBUG__SHOW_TILES, MINE_IMG
+from ..core.constants import TILES, DEBUG__SHOW_TILES, MINE_IMG, FLAG_IMG
 import pygame
 import os
 
@@ -11,6 +11,7 @@ class BoardTile:
             raise ValueError("Argument 'tile = {}' is not valid. Must be either {}".format(
                 tile, TILES.__tiles))
         self._is_open = False
+        self._is_flagged = False
         self._tile = TILES(tile)
 
     @property
@@ -34,12 +35,25 @@ class BoardTile:
         Return whether or not the tile has been opened
         """
         return self._opened
+
+    @property
+    def is_flagged(self) -> bool:
+        """
+        Return whether or not the tile has a flag on it
+        """
+        return self._is_flagged
     
     def open(self):
         """
         Open a tile
         """
         self._is_open = True 
+    
+    def toggle_flag(self):
+        """
+        Toggle the flag status of a cell
+        """
+        self._is_flagged = not self._is_flagged
 
     def set_type(self, new_type: TILES):
         """
@@ -58,9 +72,12 @@ class BoardTile:
         image = None
 
         if self._is_open or DEBUG__SHOW_TILES or dbg_show_bombs:
+            # render mine on tile
             if self._tile == TILES.MINE:
-                color = 'red'
-                width = 10
                 image = pygame.transform.scale(MINE_IMG, (tile_width, tile_width))
         
+        # render flag on tile
+        elif not self._is_open and self._is_flagged:
+            image = pygame.transform.scale(FLAG_IMG,(tile_width, tile_width))
+
         return color, rect, width, image

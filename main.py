@@ -55,6 +55,8 @@ while game_state != GAME_STATE.STOPPED:
                 agent.move_right()
             elif event.key == pygame.K_RETURN:
                 agent.open_tile()
+            elif event.key == pygame.K_f:
+                agent.flag_tile()
 
             # debug commands
             elif event.key == pygame.K_s: # show bombs while holding down
@@ -65,6 +67,8 @@ while game_state != GAME_STATE.STOPPED:
         elif event.type == pygame.KEYUP:
             # turn off debug commands
             dbg_show_bombs = False
+        
+        # rendering stuff
         board.screen.fill(BACKGROUND_COLOR)
         board.draw(dbg_show_bombs = dbg_show_bombs)
         agent.draw()

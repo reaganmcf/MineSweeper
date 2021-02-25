@@ -1,5 +1,14 @@
 # MineSweeper
 
+# Commands
+
+## Game Commands
+|Key|       Function             |
+|---|----------------------------|
+|`RETURN`|Open tile the agent is currently at|
+|`f`|Place flag on tile the agent is currently at|
+
+
 ## Debugging Commands
 
 |Key|       Function             |
