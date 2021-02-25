@@ -47,7 +47,7 @@ class BoardTile:
         """
         self._tile = new_type
 
-    def get_component(self, tile_width: int) -> tuple:
+    def get_component(self, tile_width: int, dbg_show_bombs: bool = False) -> tuple:
         """ 
         Return a tuple (color, pygame.Rect, lineWidth) of the given tile and return it to be rendered by the board
         """
@@ -55,7 +55,7 @@ class BoardTile:
         rect = pygame.Rect(self._i * tile_width, self._j * tile_width, tile_width, tile_width)
         width = 1
 
-        if self._is_open or DEBUG__SHOW_TILES:
+        if self._is_open or DEBUG__SHOW_TILES or dbg_show_bombs:
             if self._tile == TILES.MINE:
                 color = 'red'
                 width = 10

@@ -35,6 +35,10 @@ agent = Agent(i=0, j=0, screen=board.screen, board=board)
 # Game clock and event loop
 clock = pygame.time.Clock()
 game_state: GAME_STATE = GAME_STATE.RUNNING
+
+# debug flags
+dbg_show_bombs = False
+
 while game_state != GAME_STATE.STOPPED:
     clock.tick(60)
     for event in pygame.event.get():
@@ -52,8 +56,15 @@ while game_state != GAME_STATE.STOPPED:
             elif event.key == pygame.K_RETURN:
                 agent.open_tile()
 
+            # debug commands
+            elif event.key == pygame.K_s: # show bombs while holding down
+                dbg_show_bombs = True
+
+        elif event.type == pygame.KEYUP:
+            # turn off debug commands
+            dbg_show_bombs = False
         board.screen.fill(BACKGROUND_COLOR)
-        board.draw()
+        board.draw(dbg_show_bombs = dbg_show_bombs)
         agent.draw()
 
     pygame.display.flip()

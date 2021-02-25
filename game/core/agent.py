@@ -39,7 +39,7 @@ class Agent:
 
     def open_tile(self):
         # interact with current tile and change its state
-        self._board.open_tile()
+        self._board.open_tile(self._j, self._i)
 
     """
     END AI SPECIFIC FUNCTIONS

@@ -70,17 +70,17 @@ class Board:
                 self._tiles[rand_i][rand_j].set_type(TILES.MINE)
                 bombs_left -= 1
 
-    def open_tile(i: int, j: int):
+    def open_tile(self, i: int, j: int):
         """
         Open (or interact with) a tile at a given index
         """
-        self._tiles[i][j].open(i,j)
+        self._tiles[i][j].open()
 
-    def draw(self):
+    def draw(self, dbg_show_bombs: bool = False):
         """
         Draw board state on pygame window
         """
         for tile_row in self._tiles:
             for tile in tile_row:
-                color, rect, width = tile.get_component(self._tile_width)
+                color, rect, width = tile.get_component(self._tile_width, dbg_show_bombs=dbg_show_bombs)
                 pygame.draw.rect(self._screen, color, rect, width)
