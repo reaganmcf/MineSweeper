@@ -15,12 +15,6 @@ class Agent:
         # tile width is passed in so we know how large to make the agent
         self._tile_width = board.tile_width
 
-    """
-    BEGIN AI SPECIFIC FUNCTIONS
-
-    The AI should ONLY be interacting with the following functions
-    """
-
     def move_up(self):
         # Make sure we don't go off screen
         self._j = max(0, self._j - 1)
@@ -44,10 +38,6 @@ class Agent:
     def flag_tile(self):
         # interact with current tile and flag it
         self._board.flag_tile(self._j, self._i)
-
-    """
-    END AI SPECIFIC FUNCTIONS
-    """
 
     @property
     def i(self):
