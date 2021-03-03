@@ -17,6 +17,7 @@ EVENT_MOVE_UP = pygame.event.Event(pygame.USEREVENT, attr1="EVENT_MOVE_UP")
 EVENT_MOVE_DOWN = pygame.event.Event(pygame.USEREVENT, attr1="EVENT_MOVE_DOWN")
 EVENT_MOVE_LEFT = pygame.event.Event(pygame.USEREVENT, attr1="EVENT_MOVE_LEFT")
 EVENT_MOVE_RIGHT = pygame.event.Event(pygame.USEREVENT, attr1="EVENT_MOVE_RIGHT")
+EVENT_OPEN_TILE = pygame.event.Event(pygame.USEREVENT, attr1="EVENT_OPEN_TILE")
 
 # game states
 class GAME_STATE(enum.Enum):

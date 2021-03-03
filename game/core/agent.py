@@ -14,6 +14,13 @@ class Agent:
 
         # tile width is passed in so we know how large to make the agent
         self._tile_width = board.tile_width
+    
+    def set_pos(self, new_i, new_j):
+        """
+        Override the agent's position to a new location
+        """
+        self._i = new_i
+        self._j = new_j
 
     def move_up(self):
         # Make sure we don't go off screen
@@ -34,10 +41,16 @@ class Agent:
     def open_tile(self):
         # interact with current tile and change its state
         self._board.open_tile(self._j, self._i)
-
+    
     def flag_tile(self):
         # interact with current tile and flag it
         self._board.flag_tile(self._j, self._i)
+    
+    def get_tile(self):
+        """
+        Return the BoardTile the agent is located at
+        """
+        return self._board.get_tile(self._i, self._j)
 
     @property
     def i(self):
@@ -52,6 +65,13 @@ class Agent:
         Returns j index of where the agent is in the board
         """
         return self._j
+    
+    @property
+    def board(self):
+        """
+        Return the Board instance
+        """
+        return self._board
 
     @property
     def screen(self):

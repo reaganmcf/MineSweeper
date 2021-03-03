@@ -62,6 +62,12 @@ class Board:
         """
         self._game_state = new_game_state
 
+    def get_tile(self, i, j):
+        """
+        Get tile at given position
+        """
+        return self._tiles[i][j]
+
     def init_tiles(self):
         """
         Initialize a list of tiles
@@ -86,18 +92,30 @@ class Board:
 
         # calculate the new tile type by checking adjacent neighbors
         if self._tiles[i][j].type != TILES.MINE:
-            dirs = [(-1,-1),(-1,0),(-1,1),(0,-1),(0,1),(1,-1),(1,0),(1,1)]
+            neighbors = self.get_neighboring_tiles(i,j)
             num_mines = 0
-            for dx,dy in dirs:
-                nx,ny = i + dx, j + dy
-                # check bounds
-                if 0 <= nx and nx < self._dim and 0 <= ny and ny < self._dim:
-                    if self._tiles[nx][ny].type == TILES.MINE:
-                        num_mines += 1     
+            for tile in neighbors:
+                if tile.type == TILES.MINE:
+                    num_mines += 1
+
             # update tile type
             self._tiles[i][j].set_type(TILES(num_mines))
 
         self._tiles[i][j].open()
+
+    def get_neighboring_tiles(self, i: int, j: int) -> list:
+        """
+        Return a list of all neighboring cells
+        """ 
+        dirs = [(-1,-1),(-1,0),(-1,1),(0,-1),(0,1),(1,-1),(1,0),(1,1)]
+        neighbors = []
+        for dx,dy in dirs:
+            nx,ny = i + dx, j + dy
+            # check bounds
+            if 0 <= nx and nx < self._dim and 0 <= ny and ny < self._dim:
+                neighbors.append(self._tiles[nx][ny])
+
+        return neighbors
 
     def flag_tile(self, i: int, j: int):
         """

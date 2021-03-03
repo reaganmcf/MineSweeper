@@ -4,10 +4,10 @@ import pygame
 from threading import Thread
 
 from pygame.locals import QUIT
-from game.core.constants import DEFAULT_DIM, DEFAULT_BOMB_COUNT, GAME_STATE, WINDOW_WIDTH, WINDOW_HEIGHT, BACKGROUND_COLOR, EVENT_MOVE_UP, EVENT_MOVE_DOWN, EVENT_MOVE_LEFT, EVENT_MOVE_RIGHT
+from game.core.constants import DEFAULT_DIM, DEFAULT_BOMB_COUNT, GAME_STATE, WINDOW_WIDTH, WINDOW_HEIGHT, BACKGROUND_COLOR, EVENT_MOVE_UP, EVENT_MOVE_DOWN, EVENT_MOVE_LEFT, EVENT_MOVE_RIGHT, EVENT_OPEN_TILE
 from game.board_utils.board import Board
 from game.core.agent import Agent
-
+from game.ai_utils import ai, basic_agent
 
 # Arguments
 parser = argparse.ArgumentParser(description="Options")
@@ -38,9 +38,8 @@ agent = Agent(i=0, j=0, screen=board.screen, board=board)
 dbg_show_bombs = False
 
 # Start AI Thread
-import game.ai_utils.ai as ai
-ai_thread = Thread(target = ai.start, args=(board,))
-ai_thread.start()
+basic_ai_thread = Thread(target = basic_agent.start, args=(board,agent))
+basic_ai_thread.start()
 
 while board.game_state != GAME_STATE.STOPPED:
     clock.tick(60)
@@ -48,17 +47,19 @@ while board.game_state != GAME_STATE.STOPPED:
         # Close Window
         if event.type == QUIT:
             board.set_game_state(GAME_STATE.STOPPED)
-            ai_thread.join()
+            basic_ai_thread.join()
  
         # Custom Event Handlers from AI
-        elif event == EVENT_MOVE_UP:
-            agent.move_up()
-        elif event == EVENT_MOVE_DOWN:
-            agent.move_down()
-        elif event == EVENT_MOVE_LEFT:
-            agent.move_left()
-        elif event == EVENT_MOVE_RIGHT:
-            agent.move_right()
+        #elif event == EVENT_MOVE_UP:
+        #    agent.move_up()
+        #elif event == EVENT_MOVE_DOWN:
+        #    agent.move_down()
+        #elif event == EVENT_MOVE_LEFT:
+        #    agent.move_left()
+        #elif event == EVENT_MOVE_RIGHT:
+        #    agent.move_right()
+        #elif event == EVENT_OPEN_TILE:
+        #    agent.open_tile()
 
         # Keyboard Press Events
         elif event.type == pygame.KEYDOWN:
