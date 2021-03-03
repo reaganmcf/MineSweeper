@@ -24,27 +24,27 @@ class Agent:
 
     def move_up(self):
         # Make sure we don't go off screen
-        self._j = max(0, self._j - 1)
+        self._i = max(0, self._i - 1)
 
     def move_down(self):
         # Make sure we don't go off screen
-        self._j = min(self._board.dim-1, self._j + 1)
+        self._i = min(self._board.dim-1, self._i + 1)
     
     def move_left(self):
         # Make sure we don't go off screen
-        self._i = max(0, self._i - 1)
+        self._j = max(0, self._j - 1)
 
     def move_right(self):
         # Make sure we don't go off screen
-        self._i = min(self._board.dim-1, self._i+1)    
+        self._j = min(self._board.dim-1, self._j+1)    
 
     def open_tile(self):
         # interact with current tile and change its state
-        self._board.open_tile(self._j, self._i)
+        self._board.open_tile(self._i, self._j)
     
     def flag_tile(self):
         # interact with current tile and flag it
-        self._board.flag_tile(self._j, self._i)
+        self._board.flag_tile(self._i, self._j)
     
     def get_tile(self):
         """
@@ -87,7 +87,7 @@ class Agent:
         # Agent is 80% the size of a tile
         agent_width = self._tile_width * 0.8
         # Create agent rectangle (can use sprites later)
-        rect = pygame.Rect(self._i * self._tile_width, self._j * self._tile_width, agent_width, agent_width)
+        rect = pygame.Rect(self._j * self._tile_width, self._i * self._tile_width, agent_width, agent_width)
         # Center (inplace) the agent rectangle
         rect.move_ip(self._tile_width * 0.1, self._tile_width * .1)
         # Draw the agent
