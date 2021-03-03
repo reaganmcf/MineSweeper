@@ -30,11 +30,11 @@ class BoardTile:
         return self._tile
 
     @property
-    def is_open(self) -> bool:
+    def is_opened(self) -> bool:
         """
         Return whether or not the tile has been opened
         """
-        return self._opened
+        return self._is_open
 
     @property
     def is_flagged(self) -> bool:
