@@ -14,6 +14,10 @@ def start(board: Board, agent: Agent):
     """
     Start the basic agent
     """
+
+
+   
+
     agent_start = (agent.i, agent.j)
     
     # is the agent finished traversing (i.e. no more moves left)
@@ -26,7 +30,7 @@ def start(board: Board, agent: Agent):
     next_tiles = [agent_start]
 
     while(not agent_done):
-        time.sleep(1)
+        time.sleep(3)
         pygame.event.post(pygame.event.Event(pygame.USEREVENT, attr1="force rerender"))
         #if len(next_tiles) == 0:
          #   next_tiles.append(agent_start)
@@ -35,16 +39,19 @@ def start(board: Board, agent: Agent):
         i,j = next_tiles.pop(0)
         
         #DEBUG
-        print(i,j)
         
         # update agent position
         agent.set_pos(i,j)
+        print("agent postion: " , str(agent.i), str(agent.j))
 
         # check if tile has been opened
         curr_tile = agent.get_tile()
+        print("tile position", str(curr_tile._i), str(curr_tile._j))
+        print(curr_tile.type)
 
         # if the tile is unopened, we know (besides the very first) that it is safe
-        if curr_tile.type == TILES.UNOPENED:
+        if curr_tile.is_opened == False:
+            print("Opening tile")
             agent.open_tile()
             # we have to reassign curr_tile since the status has changed
             curr_tile = agent.get_tile()
@@ -62,16 +69,19 @@ def start(board: Board, agent: Agent):
         total_unopened_neighbors = len(unopened_neighbors)
         
         print("total_neighbors = " + str(total_neighbors))
+        print("total_unopened_neighbors = " + str(total_unopened_neighbors))
 
         # value of the current cell (0-8)
         clue = curr_tile.type.value
-            
+
+        #something wrong here
+
         if clue == total_unopened_neighbors:
             # all unopened neighbors are mines, so flag them (and add to our score :) )
             for tile in unopened_neighbors:
                 tile.toggle_flag()
                 score += 1
-        elif total_neighbors - clue == total_unopened_neighbors:
+        elif total_neighbors - clue >= total_unopened_neighbors:
             # add all unopened neighbors into the queue
             for tile in neighbors:
                 next_tiles.append((tile.i, tile.j))
