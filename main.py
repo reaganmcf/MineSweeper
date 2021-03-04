@@ -43,7 +43,7 @@ dbg_show_bombs = False
 # Start AI Thread
 basic_ai_thread = None
 if args.agent == "basic":
-    printf("Using AI agent - manual mode still enabled")
+    print("Using AI agent - manual mode still enabled")
     basic_ai_thread = Thread(target = basic_agent.start, args=(board,agent))
     basic_ai_thread.start()
 elif args.agent == "advanced":
