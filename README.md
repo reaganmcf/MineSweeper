@@ -1,15 +1,32 @@
 # MineSweeper
 
-# Commands
+## Usage
 
-## Game Commands
+### Arguments
+
+|Flag| Type | Description |
+|----|------|-------------|
+|`--dim`|`int`|Dimension of the minesweeper board|
+|`--agent`|`basic\|advanced`|Which agent to use|
+|`--bomb_count`|`int`|Number of bombs to place randomly across the board|
+
+### Example
+Refer to _DEVELOPMENT_ for how to setup virtualenv
+```bash
+$ source minesweepervenv/bin/activate
+$ python3 main.py --agent basic --dim 25 --bomb_count 20
+```
+
+## Commands
+
+### Game Commands
 |Key|       Function             |
 |---|----------------------------|
 |`RETURN`|Open tile the agent is currently at|
 |`f`|Place flag on tile the agent is currently at|
 
 
-## Debugging Commands
+### Debugging Commands
 
 |Key|       Function             |
 |---|----------------------------|

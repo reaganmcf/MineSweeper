@@ -12,10 +12,13 @@ from game.ai_utils import ai, basic_agent
 # Arguments
 parser = argparse.ArgumentParser(description="Options")
 # Add Arguments
-parser.add_argument("dim", help="dimension of the grid",
+parser.add_argument("--dim", help="dimension of the grid",
                     default=DEFAULT_DIM, type=int)
 parser.add_argument(
-    "bomb_count", help="number of bombs to be placed randomly in the grid", default=DEFAULT_BOMB_COUNT, type=int)
+    "--bomb_count", help="number of bombs to be placed randomly in the grid", default=DEFAULT_BOMB_COUNT, type=int)
+
+parser.add_argument(
+    "--agent", help="Which agent to use, either `basic` or `advanced`", type=str)
 
 args = parser.parse_args()
 
@@ -32,7 +35,15 @@ def init():
     return Board(dim=args.dim, bomb_count=args.bomb_count, screen=screen, tile_width=CELL_WIDTH, game_state=GAME_STATE.RUNNING)
 
 board = init()
-agent = Agent(i=0, j=0, screen=board.screen, board=board)
+agent = None
+if args.agent == "basic":
+    print("Using basic agent")
+    agent = Agent(i=0, j=0, screen=board.screen, board=board)
+elif args.agent == "advanced":
+    print("Advanced Agent not yet supported")
+else:
+    print("Please pass in --agent flag")
+    exit(1)
 
 # debug flags
 dbg_show_bombs = False
@@ -42,7 +53,7 @@ basic_ai_thread = Thread(target = basic_agent.start, args=(board,agent))
 basic_ai_thread.start()
 
 while board.game_state != GAME_STATE.STOPPED:
-    clock.tick(60)
+    clock.tick(20)
     for event in pygame.event.get():
         # Close Window
         if event.type == QUIT:

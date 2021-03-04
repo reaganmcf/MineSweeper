@@ -33,14 +33,14 @@ def start(board: Board, agent: Agent):
     unfinished_tiles = []
 
     while(not agent_done):
-        time.sleep(1)
+        time.sleep(0.01)
         pygame.event.post(pygame.event.Event(pygame.USEREVENT, attr1="force rerender"))
 
 
         if not tiles_to_open: #if the list to open new tiles is empty, then we must choose a new tile to get more information
             random_tile = random_tile_to_open(board)
             if not random_tile:
-                print("GAME OVER, SCORE = ", score)
+                #print("GAME OVER, SCORE = ", score)
                 break
             tiles_to_open.append(random_tile)
         

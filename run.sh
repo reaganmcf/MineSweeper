@@ -1,2 +1,2 @@
 #!/bin/sh
-python3 main.py 10 12
+python3 main.py --agent basic --dim 10 --bomb_count 12
