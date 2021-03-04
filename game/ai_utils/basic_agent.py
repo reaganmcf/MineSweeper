@@ -134,8 +134,8 @@ def check_neighbors(curr_tile: BoardTile, board: Board, unfinished_tiles: list, 
         for tile in unopened_neighbors:
             if tile not in tiles_to_open:
                 tiles_to_open.append(tile)
-    # if the number of unopened neighbors equals the clue then all neighbors are mines
-    elif total_unopened_neighbors == clue:
+    # if the number of unopened neighbors equals the clue minus already flagged then all neighbors are mines
+    elif total_unopened_neighbors == clue - total_mine_flagged_neighbors:
         for tile in unopened_neighbors:
             if not tile.is_flagged:
                 tile.toggle_flag()
