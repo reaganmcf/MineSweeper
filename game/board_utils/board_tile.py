@@ -13,6 +13,9 @@ class BoardTile:
         self._is_open = False
         self._is_flagged = False
         self._tile = TILES(tile)
+    
+    def __str__(self):
+        return str(self.i)+", "+ str(self.j)
 
     @property
     def i(self) -> int:
