@@ -73,8 +73,8 @@ class Board:
         Initialize a list of tiles
         """
         self._tiles = [
-            [BoardTile(TILES.UNOPENED, i, j) for i in range(self._dim)]
-            for j in range(self._dim)
+            [BoardTile(TILES.UNOPENED, i, j) for j in range(self._dim)]
+            for i in range(self._dim)
         ]
 
         # place bombs randomly
