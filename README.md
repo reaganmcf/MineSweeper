@@ -7,7 +7,7 @@
 |Flag| Type | Description |
 |----|------|-------------|
 |`--dim`|`int`|Dimension of the minesweeper board|
-|`--agent`|`basic\|advanced`|Which agent to use|
+|`--agent`|`none\|basic\|advanced`|Which agent to use (if any)|
 |`--bomb_count`|`int`|Number of bombs to place randomly across the board|
 
 ### Example

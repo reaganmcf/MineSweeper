@@ -18,7 +18,7 @@ parser.add_argument(
     "--bomb_count", help="number of bombs to be placed randomly in the grid", default=DEFAULT_BOMB_COUNT, type=int)
 
 parser.add_argument(
-    "--agent", help="Which agent to use, either `basic` or `advanced`", type=str)
+    "--agent", help="Which agent to use, either `basic`|`advanced`|`none`", type=str)
 
 args = parser.parse_args()
 
@@ -35,22 +35,24 @@ def init():
     return Board(dim=args.dim, bomb_count=args.bomb_count, screen=screen, tile_width=CELL_WIDTH, game_state=GAME_STATE.RUNNING)
 
 board = init()
-agent = None
-if args.agent == "basic":
-    print("Using basic agent")
-    agent = Agent(i=0, j=0, screen=board.screen, board=board)
-elif args.agent == "advanced":
-    print("Advanced Agent not yet supported")
-else:
-    print("Please pass in --agent flag")
-    exit(1)
+agent = Agent(i=0, j=0, screen=board.screen, board=board)
 
 # debug flags
 dbg_show_bombs = False
 
 # Start AI Thread
-basic_ai_thread = Thread(target = basic_agent.start, args=(board,agent))
-basic_ai_thread.start()
+basic_ai_thread = None
+if args.agent == "basic":
+    printf("Using AI agent - manual mode still enabled")
+    basic_ai_thread = Thread(target = basic_agent.start, args=(board,agent))
+    basic_ai_thread.start()
+elif args.agent == "advanced":
+    print("Advanced AI not yet implemented")
+    exit(0)
+elif args.agent == "none":
+    print("No agent being used - manual mode enabled")
+else:
+    print("No valid agent specified - refer to --help flag for more info")
 
 while board.game_state != GAME_STATE.STOPPED:
     clock.tick(20)
@@ -58,19 +60,8 @@ while board.game_state != GAME_STATE.STOPPED:
         # Close Window
         if event.type == QUIT:
             board.set_game_state(GAME_STATE.STOPPED)
-            basic_ai_thread.join()
- 
-        # Custom Event Handlers from AI
-        #elif event == EVENT_MOVE_UP:
-        #    agent.move_up()
-        #elif event == EVENT_MOVE_DOWN:
-        #    agent.move_down()
-        #elif event == EVENT_MOVE_LEFT:
-        #    agent.move_left()
-        #elif event == EVENT_MOVE_RIGHT:
-        #    agent.move_right()
-        #elif event == EVENT_OPEN_TILE:
-        #    agent.open_tile()
+            if basic_ai_thread != None:
+                basic_ai_thread.join()
 
         # Keyboard Press Events
         elif event.type == pygame.KEYDOWN:
