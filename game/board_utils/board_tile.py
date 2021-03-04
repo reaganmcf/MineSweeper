@@ -1,4 +1,4 @@
-from ..core.constants import TILES, DEBUG__SHOW_TILES, MINE_IMG, FLAG_IMG, ZERO_IMG, ONE_IMG, TWO_IMG, THREE_IMG, FOUR_IMG, FIVE_IMG, SIX_IMG, SEVEN_IMG, EIGHT_IMG
+from ..core.constants import TILES, DEBUG__SHOW_TILES, MINE_IMG, FLAG_IMG, ZERO_IMG, ONE_IMG, TWO_IMG, THREE_IMG, FOUR_IMG, FIVE_IMG, SIX_IMG, SEVEN_IMG, EIGHT_IMG, UNOPENED_IMG
 import pygame
 import os
 
@@ -73,7 +73,7 @@ class BoardTile:
         rect = pygame.Rect(self._i * tile_width, self._j * tile_width, tile_width, tile_width)
         width = 1
         image = None
-
+        
         if self._is_open or DEBUG__SHOW_TILES or dbg_show_bombs:
             # render mine on tile
             if self._tile == TILES.MINE:
@@ -97,7 +97,10 @@ class BoardTile:
             elif self._tile == TILES.EIGHT:
                 image = pygame.transform.scale(EIGHT_IMG, (tile_width, tile_width))
         # render flag on tile
-        elif not self._is_open and self._is_flagged:
-            image = pygame.transform.scale(FLAG_IMG, (tile_width, tile_width))
+        elif not self._is_open:
+            if self._is_flagged:
+                image = pygame.transform.scale(FLAG_IMG, (tile_width, tile_width))
+            else:
+                image = pygame.transform.scale(UNOPENED_IMG, (tile_width, tile_width))
 
         return color, rect, width, image

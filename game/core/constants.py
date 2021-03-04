@@ -31,6 +31,8 @@ MINE_IMG = pygame.image.load(os.path.join(
     os.path.dirname(__file__), "../../assets/bomb.png"))
 FLAG_IMG = pygame.image.load(os.path.join(
     os.path.dirname(__file__), "../../assets/flag.png"))
+UNOPENED_IMG = pygame.image.load(os.path.join(
+    os.path.dirname(__file__), "../../assets/unopened.png"))
 ZERO_IMG = pygame.image.load(os.path.join(
     os.path.dirname(__file__), "../../assets/zero.png"))
 ONE_IMG = pygame.image.load(os.path.join(
