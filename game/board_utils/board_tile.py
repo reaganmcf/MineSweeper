@@ -70,7 +70,7 @@ class BoardTile:
         """
 
         color = 'black'
-        rect = pygame.Rect(self._i * tile_width, self._j * tile_width, tile_width, tile_width)
+        rect = pygame.Rect(self._j * tile_width, self._i * tile_width, tile_width, tile_width)
         width = 1
         image = None
         
