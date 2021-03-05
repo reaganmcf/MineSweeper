@@ -19,7 +19,7 @@ def start(board: Board, agent: Agent):
     """
 
     start_tile = board.get_tile(agent.i, agent.j) #first tile we look at is the agent's starting position
-    
+
     # is the agent finished traversing (i.e. no more moves left)
     agent_done = False
 
@@ -39,9 +39,12 @@ def start(board: Board, agent: Agent):
 
         if not tiles_to_open: #if the list to open new tiles is empty, then we must choose a new tile to get more information
             random_tile = random_tile_to_open(board)
+            
+            #ends the game, no tiles remaining to open
             if not random_tile:
-                #print("GAME OVER, SCORE = ", score)
-                break
+                print("GAME OVER, SCORE = ", score)
+                #pygame.event.post(pygame.event.Event(pygame.QUIT, attr1={"Score": score})) #THIS CLOSES THE SCREEN TOO FAST
+                return score
             tiles_to_open.append(random_tile)
         
         #DEBUG
@@ -51,22 +54,15 @@ def start(board: Board, agent: Agent):
 
         # update agent position
         agent.set_pos(i,j)
-        #print("agent postion: " , str(agent.i), str(agent.j))
-
-        # check if tile has been opened
-        # print("tile position: ", str(curr_tile._i), str(curr_tile._j))
-        # print(curr_tile.type)
 
         # if the tile is unopened, we know (besides the very first) that it is safe
         if curr_tile.is_opened == False:
-            # print("Opening tile")
             board.open_tile(i,j)
             # we have to reassign curr_tile since the status has changed
             curr_tile = agent.get_tile()
         
-        # now, check if we accidentally opened mine
+        # now, check if we accidentally opened a mine
         if curr_tile.type == TILES.MINE:
-            # curr_tile.toggle_flag()
             continue
         
         score = check_neighbors(curr_tile, board, unfinished_tiles, tiles_to_open, score)
@@ -108,6 +104,12 @@ def random_tile_to_open(board: Board)-> BoardTile: #something wrong w this funct
 
 
 def check_neighbors(curr_tile: BoardTile, board: Board, unfinished_tiles: list, tiles_to_open: list, score: int):
+
+    """
+    looks at all neighbors for the current tiles, if it satisfies requirements, 
+    it will either flag the neighboring tiles or add them to the tiles_to_open list
+    returns the score (if we flag tiles, we want to increment score)
+    """
     i, j = curr_tile.i, curr_tile.j
     # go over all neighboring cells
     neighbors = board.get_neighboring_tiles(i, j)
@@ -118,16 +120,7 @@ def check_neighbors(curr_tile: BoardTile, board: Board, unfinished_tiles: list, 
     total_unopened_neighbors = len(unopened_neighbors)
     total_mine_flagged_neighbors = len(mine_flagged_neighbors)
 
-    # print("total_neighbors = " + str(total_neighbors))
-    # print("total_unopened_neighbors = " + str(total_unopened_neighbors))
-    # print("total_mine_flagged_nieghbors = " + str(total_mine_flagged_neighbors))
-
     clue = curr_tile.type.value
-
-
-    """
-    Still seems to be an issue somewhere here lmk if you guys see anything but over all the rest of this seems fine
-    """
 
     # if we found all mines that are neighbors then the rest of the unopened neighbors are safe
     if total_mine_flagged_neighbors == clue:
