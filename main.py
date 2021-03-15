@@ -7,7 +7,7 @@ from pygame.locals import QUIT
 from game.core.constants import DEFAULT_DIM, DEFAULT_BOMB_COUNT, GAME_STATE, WINDOW_WIDTH, WINDOW_HEIGHT, BACKGROUND_COLOR, EVENT_MOVE_UP, EVENT_MOVE_DOWN, EVENT_MOVE_LEFT, EVENT_MOVE_RIGHT, EVENT_OPEN_TILE
 from game.board_utils.board import Board
 from game.core.agent import Agent
-from game.ai_utils import ai, basic_agent
+from game.ai_utils import advanced_agent, basic_agent
 
 # Arguments
 parser = argparse.ArgumentParser(description="Options")
@@ -26,6 +26,8 @@ args = parser.parse_args()
 clock = pygame.time.Clock()
 
 # Initialize things and return a new instance of Board
+
+
 def init():
     screen = pygame.display.set_mode((WINDOW_WIDTH, WINDOW_HEIGHT))
     pygame.display.set_caption('MineSweeper')
@@ -33,6 +35,7 @@ def init():
     # Calculate the width of a tile
     CELL_WIDTH = int((WINDOW_WIDTH) / args.dim)
     return Board(dim=args.dim, bomb_count=args.bomb_count, screen=screen, tile_width=CELL_WIDTH, game_state=GAME_STATE.RUNNING)
+
 
 board = init()
 agent = Agent(i=0, j=0, screen=board.screen, board=board)
@@ -42,17 +45,21 @@ dbg_show_bombs = False
 
 # Start AI Thread
 basic_ai_thread = None
+advanced_ai_thread = None
 if args.agent == "basic":
     print("Using AI agent - manual mode still enabled")
-    basic_ai_thread = Thread(target = basic_agent.start, args=(board,agent))
+    basic_ai_thread = Thread(target=basic_agent.start, args=(board, agent))
     basic_ai_thread.start()
 elif args.agent == "advanced":
-    print("Advanced AI not yet implemented")
-    exit(0)
+    print("Using Advanced AI agent - manual mode still enabled")
+    advanced_ai_thread = Thread(
+        target=advanced_agent.start, args=(board, agent))
+    advanced_ai_thread.start()
 elif args.agent == "none":
     print("No agent being used - manual mode enabled")
 else:
     print("No valid agent specified - refer to --help flag for more info")
+    exit(0)
 
 while board.game_state != GAME_STATE.STOPPED:
     clock.tick(20)
@@ -79,18 +86,18 @@ while board.game_state != GAME_STATE.STOPPED:
                 agent.flag_tile()
 
             # debug commands
-            elif event.key == pygame.K_s: # show bombs while holding down
+            elif event.key == pygame.K_s:  # show bombs while holding down
                 dbg_show_bombs = True
-            elif event.key == pygame.K_r: # reinitialize the board
+            elif event.key == pygame.K_r:  # reinitialize the board
                 board.init_tiles()
 
         elif event.type == pygame.KEYUP:
             # turn off debug commands
             dbg_show_bombs = False
-        
+
         # rendering stuff
         board.screen.fill(BACKGROUND_COLOR)
-        board.draw(dbg_show_bombs = dbg_show_bombs)
+        board.draw(dbg_show_bombs=dbg_show_bombs)
         agent.draw()
 
     pygame.display.flip()
