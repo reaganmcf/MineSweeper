@@ -1,10 +1,27 @@
 import pygame
+import numpy as np
+from sympy import Symbol, linsolve, linear_eq_to_matrix, solveset, FiniteSet, Eq, S, symbols, simplify, solve, And, satisfiable, Or
 from ..core.constants import GAME_STATE, EVENT_MOVE_UP, EVENT_MOVE_DOWN, EVENT_MOVE_LEFT, EVENT_MOVE_RIGHT, EVENT_OPEN_TILE, TILES
 from ..board_utils.board import Board
 from ..core.agent import Agent
 import time
 import random
 from ..board_utils.board_tile import BoardTile
+
+"""
+Types of Operations:
+    - 
+"""
+
+"""
+Knowledge Base:
+    knowledge_base = {
+        x: [(x+y+z, 1)],
+        y: [(x+y+z, 1)],
+        z: [(x+y+z, 1)]
+    }
+    keys are symbols, values are a list of tuples (lhs = sympy equation, rhs = integer)
+"""
 
 
 def start(board: Board, agent: Agent):
@@ -17,6 +34,14 @@ def start(board: Board, agent: Agent):
 
     # is the agent finished traversing (i.e. no more moves left)
     agent_done = False
+
+    # create the symbols
+    # generate symbols
+    dim = board.dim
+    tiles = np.array([[Symbol('cell_{}_{}'.format(i,j), integer=True) for j in range(dim)] for i in range(dim)])
+
+    # create knowledge base
+
 
     # number of tiles flagged
     score = 0
@@ -32,7 +57,6 @@ def start(board: Board, agent: Agent):
         time.sleep(1)
 
 
-# something wrong w this function
 def random_tile_to_open(board: Board) -> BoardTile:
     """
     Pick a random tile to restart at by looking at board and choosing which 

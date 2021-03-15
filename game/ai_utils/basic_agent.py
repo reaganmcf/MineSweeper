@@ -81,7 +81,7 @@ def start(board: Board, agent: Agent):
 
         
         
-def random_tile_to_open(board: Board)-> BoardTile: #something wrong w this function
+def random_tile_to_open(board: Board)-> BoardTile:
     """
     Pick a random tile to restart at by looking at board and choosing which 
     """
