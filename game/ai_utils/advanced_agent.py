@@ -113,7 +113,7 @@ def inference(board:Board, unfinished_tiles):
             assert len(unopened_neighbors) != 0 
             
             val = tile.type.value 
-            
+
             # create the equation for the tile and value
             eqn = unopened_neighbors[0].get_symbol
             for i in range(1, len(unopened_neighbors)):
@@ -125,21 +125,6 @@ def inference(board:Board, unfinished_tiles):
             # KB maps each variable in the equation to every equation it is present in
             for neighbors in unopened_neighbors:
                 knowledge_base[neighbors.get_symbol].append([all_equations[index], val])
-
-                
-
-
-
-
-            
-
-
-
-
-
-
-
-
 
 def random_tile_to_open(board: Board) -> BoardTile:
     """
