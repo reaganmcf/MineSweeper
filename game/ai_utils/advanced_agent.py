@@ -7,6 +7,7 @@ from ..core.agent import Agent
 import time
 import random
 from ..board_utils.board_tile import BoardTile
+from constants import TILES
 
 """
 Types of Operations:
@@ -24,6 +25,7 @@ Knowledge Base:
 """
 
 
+
 def start(board: Board, agent: Agent):
     """
     Start the advanced agent
@@ -35,13 +37,9 @@ def start(board: Board, agent: Agent):
     # is the agent finished traversing (i.e. no more moves left)
     agent_done = False
 
-    # create the symbols
     # generate symbols
-    dim = board.dim
-    tiles = np.array([[Symbol('cell_{}_{}'.format(i,j), integer=True) for j in range(dim)] for i in range(dim)])
-
-    # create knowledge base
-
+    gen_symbols(board)
+    
 
     # number of tiles flagged
     score = 0
@@ -53,8 +51,94 @@ def start(board: Board, agent: Agent):
     unfinished_tiles = []
 
     while(not agent_done):
-        # TODO
-        time.sleep(1)
+        time.sleep(0.01)
+        pygame.event.post(pygame.event.Event(pygame.USEREVENT, attr1="force rerender"))
+
+
+        if not tiles_to_open: #if the list to open new tiles is empty, then we must choose a new tile to get more information
+            #TODO inference method
+            
+            random_tile = random_tile_to_open(board)
+            
+            #ends the game, no tiles remaining to open
+            if not random_tile:
+                print("GAME OVER, SCORE = ", score)
+                #pygame.event.post(pygame.event.Event(pygame.QUIT, attr1={"Score": score})) #THIS CLOSES THE SCREEN TOO FAST
+                return score
+            tiles_to_open.append(random_tile)
+        
+        curr_tile = tiles_to_open.pop(0)
+
+        i,j = curr_tile.i, curr_tile.j
+
+        # update agent position
+        agent.set_pos(i,j)
+
+        # if the tile is unopened, we know (besides the very first) that it is safe
+        if curr_tile.is_opened == False:
+            board.open_tile(i,j)
+            # we have to reassign curr_tile since the status has changed
+            curr_tile = agent.get_tile()
+        
+        # now, check if we accidentally opened a mine
+        if curr_tile.type == TILES.MINE:
+            continue
+        
+        score = check_neighbors(curr_tile, board, unfinished_tiles, tiles_to_open, score)
+
+        for i in range(len(unfinished_tiles)): #since we add elements back into the queue, we only want to iterate a specific amount of times
+            tile = unfinished_tiles.pop(0) # we want to remove the top element from the queue
+            score = check_neighbors(tile, board, unfinished_tiles, tiles_to_open, score)
+
+
+def inference(board:Board, unfinished_tiles):
+    # initialize KB with all tiles as keys
+    knowledge_base = {tile : [] for tilelist in board.tiles for tile in tilelist}
+    all_equations = []
+    
+    # look at each tile
+    for tilelist in board.tiles:
+        for tile in tilelist:
+
+            # if the tile is not opened or is opened and a mine, we cant get any info
+            if not tile.is_opened: 
+                continue
+            if tile.type == TILES.MINE:
+                continue
+            
+            unopened_neighbors = [tile for tile in neighbors if not tile.is_opened and not tile.is_flagged]
+            # since we only call this method when we have no more information we can collect using
+            # the basic agent, unopened_neighbors should never have a length of 0.
+            # But, just in case we assert
+            assert len(unopened_neighbors) != 0 
+            
+            val = tile.type.value 
+            
+            # create the equation for the tile and value
+            eqn = unopened_neighbors[0].get_symbol
+            for i in range(1, len(unopened_neighbors)):
+                eqn = eqn + unopened_neighbors[i].get_symbol
+            
+            index = len(all_equations)
+            all_equations.append(eqn)
+
+            # KB maps each variable in the equation to every equation it is present in
+            for neighbors in unopened_neighbors:
+                knowledge_base[neighbors.get_symbol].append([all_equations[index], val])
+
+                
+
+
+
+
+            
+
+
+
+
+
+
+
 
 
 def random_tile_to_open(board: Board) -> BoardTile:
@@ -74,7 +158,6 @@ def random_tile_to_open(board: Board) -> BoardTile:
     random_tile = available_tiles[rand]
 
     return random_tile
-
 
 def check_neighbors(curr_tile: BoardTile, board: Board, unfinished_tiles: list, tiles_to_open: list, score: int):
     """

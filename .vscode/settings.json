@@ -1,9 +1,9 @@
 {
-  "python.pythonPath": "minesweepervenv/bin/python",
-  "python.venvFolders": [
+    "python.venvFolders": [
     "./minesweepervenv"
   ],
   "editor.tabSize": 4,
   "editor.detectIndentation": false,
-  "pyformat.formatProvider": "black"
+"pyformat.formatProvider": "black",
+"python.pythonPath": "usr/local/Caskroom/miniconda/base/bin/python3.8"
 }

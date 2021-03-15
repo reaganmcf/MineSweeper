@@ -1,7 +1,7 @@
 from ..core.constants import TILES, DEBUG__SHOW_TILES, MINE_IMG, FLAG_IMG, ZERO_IMG, ONE_IMG, TWO_IMG, THREE_IMG, FOUR_IMG, FIVE_IMG, SIX_IMG, SEVEN_IMG, EIGHT_IMG, UNOPENED_IMG
 import pygame
 import os
-
+from sympy import Symbol
 
 class BoardTile:
     def __init__(self, tile: int, i: int, j: int):
@@ -63,6 +63,10 @@ class BoardTile:
         Set type of tile to a new tile.
         """
         self._tile = new_type
+    
+    def get_symbol(self):
+        return Symbol('tile_{}_{}'.format(self.i,self.j)
+
 
     def get_component(self, tile_width: int, dbg_show_bombs: bool = False) -> tuple:
         """

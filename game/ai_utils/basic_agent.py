@@ -72,15 +72,6 @@ def start(board: Board, agent: Agent):
             score = check_neighbors(tile, board, unfinished_tiles, tiles_to_open, score)
 
         
-        
-        
-
-        
-
-
-
-        
-        
 def random_tile_to_open(board: Board)-> BoardTile:
     """
     Pick a random tile to restart at by looking at board and choosing which 
