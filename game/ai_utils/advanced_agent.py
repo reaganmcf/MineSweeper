@@ -1,10 +1,4 @@
 import pygame
-from ..core.constants import GAME_STATE, EVENT_MOVE_UP, EVENT_MOVE_DOWN, EVENT_MOVE_LEFT, EVENT_MOVE_RIGHT, EVENT_OPEN_TILE
-from ..board_utils.board import Board
-import time
-
-
-import pygame
 from ..core.constants import GAME_STATE, EVENT_MOVE_UP, EVENT_MOVE_DOWN, EVENT_MOVE_LEFT, EVENT_MOVE_RIGHT, EVENT_OPEN_TILE, TILES
 from ..board_utils.board import Board
 from ..core.agent import Agent
