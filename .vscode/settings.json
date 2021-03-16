@@ -5,5 +5,5 @@
   "editor.tabSize": 4,
   "editor.detectIndentation": false,
 "pyformat.formatProvider": "black",
-"python.pythonPath": "minesweepervenv/bin/python"
+"python.pythonPath": "Library/Frameworks/Python.framework/Versions/3.7/bin/python3.7"
 }

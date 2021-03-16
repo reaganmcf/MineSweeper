@@ -12,7 +12,6 @@ from ..board_utils.board_tile import BoardTile
 Note: agent should not be interacted with, instead use game events
 """
 
-
 def start(board: Board, agent: Agent):
     """
     Start the basic agent
