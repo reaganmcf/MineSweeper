@@ -1,3 +1,4 @@
 venv
 minesweepervenv
 __pycache__/
+.vscode/*
