@@ -7,7 +7,7 @@ from ..core.agent import Agent
 import time
 import random
 from ..board_utils.board_tile import BoardTile
-from constants import TILES
+from ..core.constants import TILES
 
 """
 Types of Operations:
@@ -25,7 +25,6 @@ Knowledge Base:
 """
 
 
-
 def start(board: Board, agent: Agent):
     """
     Start the advanced agent
@@ -38,8 +37,6 @@ def start(board: Board, agent: Agent):
     agent_done = False
 
     # generate symbols
-    gen_symbols(board)
-    
 
     # number of tiles flagged
     score = 0
@@ -52,79 +49,141 @@ def start(board: Board, agent: Agent):
 
     while(not agent_done):
         time.sleep(0.01)
-        pygame.event.post(pygame.event.Event(pygame.USEREVENT, attr1="force rerender"))
+        pygame.event.post(pygame.event.Event(
+            pygame.USEREVENT, attr1="force rerender"))
 
+        if not tiles_to_open:  # if the list to open new tiles is empty, then we must choose a new tile to get more information
+            # TODO inference method
 
-        if not tiles_to_open: #if the list to open new tiles is empty, then we must choose a new tile to get more information
-            #TODO inference method
-            
             random_tile = random_tile_to_open(board)
-            
-            #ends the game, no tiles remaining to open
+
+            # ends the game, no tiles remaining to open
             if not random_tile:
                 print("GAME OVER, SCORE = ", score)
-                #pygame.event.post(pygame.event.Event(pygame.QUIT, attr1={"Score": score})) #THIS CLOSES THE SCREEN TOO FAST
+                # pygame.event.post(pygame.event.Event(pygame.QUIT, attr1={"Score": score})) #THIS CLOSES THE SCREEN TOO FAST
                 return score
             tiles_to_open.append(random_tile)
-        
+
         curr_tile = tiles_to_open.pop(0)
 
-        i,j = curr_tile.i, curr_tile.j
+        i, j = curr_tile.i, curr_tile.j
 
         # update agent position
-        agent.set_pos(i,j)
+        agent.set_pos(i, j)
 
         # if the tile is unopened, we know (besides the very first) that it is safe
         if curr_tile.is_opened == False:
-            board.open_tile(i,j)
+            board.open_tile(i, j)
             # we have to reassign curr_tile since the status has changed
             curr_tile = agent.get_tile()
-        
+
         # now, check if we accidentally opened a mine
         if curr_tile.type == TILES.MINE:
             continue
-        
-        score = check_neighbors(curr_tile, board, unfinished_tiles, tiles_to_open, score)
 
-        for i in range(len(unfinished_tiles)): #since we add elements back into the queue, we only want to iterate a specific amount of times
-            tile = unfinished_tiles.pop(0) # we want to remove the top element from the queue
-            score = check_neighbors(tile, board, unfinished_tiles, tiles_to_open, score)
+        score = check_neighbors(
+            curr_tile, board, unfinished_tiles, tiles_to_open, score)
+
+        # since we add elements back into the queue, we only want to iterate a specific amount of times
+        for i in range(len(unfinished_tiles)):
+            # we want to remove the top element from the queue
+            tile = unfinished_tiles.pop(0)
+            score = check_neighbors(
+                tile, board, unfinished_tiles, tiles_to_open, score)
 
 
-def inference(board:Board, unfinished_tiles):
+def inference(board: Board, unfinished_tiles):
     # initialize KB with all tiles as keys
-    knowledge_base = {tile : [] for tilelist in board.tiles for tile in tilelist}
+    #knowledge_base = {tile : [] for tilelist in board.tiles for tile in tilelist}
     all_equations = []
-    
+
     # look at each tile
-    for tilelist in board.tiles:
-        for tile in tilelist:
+    for tile in unfinished_tiles:
+        # if the tile is not opened or is opened and a mine, we cant get any info
+        if not tile.is_opened:
+            continue
+        if tile.type == TILES.MINE:
+            continue
 
-            # if the tile is not opened or is opened and a mine, we cant get any info
-            if not tile.is_opened: 
+        neighbors = board.get_neighboring_tiles(tile.i, tile.j)
+        unopened_neighbors = [
+            tile for tile in neighbors if not tile.is_opened and not tile.is_flagged]
+        # since we only call this method when we have no more information we can collect using
+        # the basic agent, unopened_neighbors should never have a length of 0.
+        # But, just in case we assert
+        assert len(unopened_neighbors) != 0
+
+        val = tile.type.value
+
+        # create the equation for the tile and value
+        eqn = unopened_neighbors[0].get_symbol
+        for i in range(1, len(unopened_neighbors)):
+            eqn = eqn + unopened_neighbors[i].get_symbol
+
+        index = len(all_equations)
+        all_equations.append([eqn, val])
+
+        # KB maps each variable in the equation to every equation it is present in
+        # for neighbors in unopened_neighbors:
+        #     knowledge_base[neighbors.get_symbol].append(all_equations[index])
+
+    # once we have a knowledge base, we want to see if we can infer anything using 2 equations instead of 1
+    # to do this we can either loop through each eqaution in eqn list and see if we can infer anything from the equations or reduce them
+
+
+def subset_reduction(all_equations: list): 
+    '''
+    Reduces redundancies in equations
+    i.e.
+    A+C+D+E = 2
+    A+D = 1
+    Then we can reduce A+C+D+E = 2 into C+E = 1
+    '''
+    for i in range(len(all_equations)):
+        for j in range(i+1, len(all_equations)):
+            eq1 = all_equations[i][0]
+            eq2 = all_equations[j][0]
+            set1 = eq1.free_symbols
+            set2 = eq2.free_symbols
+            if set1.issubset(set2):
+                # eq2 is a superset of eq1 so we can reduce eq2
+                all_equations[j][0] = eq2 - eq1
+                all_equations[j][1] = all_equations[j][1] - \
+                    all_equations[i][1]  # update value of equation
+
+            elif set2.issubset(set1):
+                # eq1-eq2
+                all_equations[i][0] = eq1 - eq2
+                all_equations[i][1] = all_equations[i][1] - all_equations[j][1]
+
+
+def double_inference(all_equations: list):
+    '''
+    looks at 2 equations and if they share the some of the same variables, we may be able to infer more info
+    eq1 = A+B+C+D =2
+    eq2 = B+D+E= 1
+    eq1-eq2 = A+C - E = 1, then we can infer that E=0, then we can also infer A+C=1, B+D = 1 (Using subset reduction)
+
+    '''
+
+    for i in range(len(all_equations)):
+        for j in range(i+1, len(all_equations)):
+            eq1 = all_equations[i][0]
+            eq2 = all_equations[j][0]
+            set1 = eq1.free_symbols
+            set2 = eq2.free_symbols
+            # if they dont share any of the same variables cant get any new info
+            if set1.isdisjoint(set2):
                 continue
-            if tile.type == TILES.MINE:
-                continue
-            
-            unopened_neighbors = [tile for tile in neighbors if not tile.is_opened and not tile.is_flagged]
-            # since we only call this method when we have no more information we can collect using
-            # the basic agent, unopened_neighbors should never have a length of 0.
-            # But, just in case we assert
-            assert len(unopened_neighbors) != 0 
-            
-            val = tile.type.value 
+            if all_equations[i][1] > all_equations[j][1]:
+                derived_eq = eq1-eq2
+                derived_val = all_equations[i][1] - all_equations[j][1]
+            else:
+                derived_eq = eq2 - eq1
+                derived_val = all_equations[j][1] - all_equations[i][1]
 
-            # create the equation for the tile and value
-            eqn = unopened_neighbors[0].get_symbol
-            for i in range(1, len(unopened_neighbors)):
-                eqn = eqn + unopened_neighbors[i].get_symbol
-            
-            index = len(all_equations)
-            all_equations.append(eqn)
+            # TODO FIGURE OUT WHAT WE NEED TO DO AFTER WE SUBTRACT 2 EQS
 
-            # KB maps each variable in the equation to every equation it is present in
-            for neighbors in unopened_neighbors:
-                knowledge_base[neighbors.get_symbol].append([all_equations[index], val])
 
 def random_tile_to_open(board: Board) -> BoardTile:
     """
@@ -143,6 +202,7 @@ def random_tile_to_open(board: Board) -> BoardTile:
     random_tile = available_tiles[rand]
 
     return random_tile
+
 
 def check_neighbors(curr_tile: BoardTile, board: Board, unfinished_tiles: list, tiles_to_open: list, score: int):
     """

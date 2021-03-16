@@ -65,7 +65,7 @@ class BoardTile:
         self._tile = new_type
     
     def get_symbol(self):
-        return Symbol('tile_{}_{}'.format(self.i,self.j)
+        return Symbol('tile_{}_{}'.format(self.i,self.j))
 
 
     def get_component(self, tile_width: int, dbg_show_bombs: bool = False) -> tuple:
