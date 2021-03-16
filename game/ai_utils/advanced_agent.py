@@ -21,6 +21,8 @@ Knowledge Base:
         equations are a list where [0] = LHS, [1] = RHS
 """
 SYMBOL_TO_TILE = dict()
+score = 0
+
 
 def start(board: Board, agent: Agent):
     """
@@ -46,7 +48,7 @@ def start(board: Board, agent: Agent):
     while(not agent_done):
         time.sleep(0.01)
         pygame.event.post(pygame.event.Event(
-            pygame.USEREVENT, attr1 = "force rerender"))
+            pygame.USEREVENT, attr1="force rerender"))
 
         if not tiles_to_open:  # if the list to open new tiles is empty, then we must choose a new tile to get more information
             # TODO inference method
@@ -87,17 +89,19 @@ def start(board: Board, agent: Agent):
             score = check_neighbors(
                 tile, board, unfinished_tiles, tiles_to_open, score)
 
+
 def gen_symbol_to_tile(board: Board):
     for tilelist in board.tile:
         for tile in tilelist:
             SYMBOL_TO_TILE[tile.get_symbol] = tile
 
-def build_knowledge_base(board:Board, unfinished_tiles: list) -> list:
+
+def build_knowledge_base(board: Board, unfinished_tiles: list) -> list:
     # initialize KB with all tiles as keys
     # knowledge_base = {tile : [] for tilelist in board.tiles for tile in tilelist}
     all_equations = []
 
-    #since we are looking at uninished tiles, we know that they are open and they have unopened neighbors, we also know they are not mines
+    # since we are looking at uninished tiles, we know that they are open and they have unopened neighbors, we also know they are not mines
     for tile in unfinished_tiles:
         neighbors = board.get_neighboring_tiles(tile.i, tile.j)
         unopened_neighbors = [
@@ -121,12 +125,17 @@ def build_knowledge_base(board:Board, unfinished_tiles: list) -> list:
         #     knowledge_base[neighbors.get_symbol].append(all_equations[index])
         return all_equations
 
+
 def inference(board: Board, unfinished_tiles: list, tiles_to_open: list):
-    all_equations = build_knowledge_base(board, unfinished_tiles)
-    subset_reduction(all_equations,tiles_to_open)
-    simplify_known_equations(all_equations, tiles_to_open)
-    # once we have a knowledge base, we want to see if we can infer anything using 2 equations instead of 1
-    # to do this we can either loop through each eqaution in eqn list and see if we can infer anything from the equations or reduce them
+    all_equations = build_knowledge_base(
+        board=board, unfinished_tiles=unfinished_tiles)
+    subset_reduction(all_equations=all_equations, tiles_to_open=tiles_to_open)
+    simplify_known_equations(all_equations=all_equations,
+                             tiles_to_open=tiles_to_open)
+    double_inference(all_equations=all_equations, tiles_to_open=tiles_to_open)
+    simplify_known_equations(all_equations=all_equations,
+                             tiles_to_open=tiles_to_open)
+
 
 def simplify_known_equations(all_equations: list, tiles_to_open: list):
     '''
@@ -134,12 +143,13 @@ def simplify_known_equations(all_equations: list, tiles_to_open: list):
     '''
     # if we made any changes and need to check for more potential simplification, set check_again to true
     check_again = True
-    
+
     # while more simplification is possible
     while check_again:
         check_again = False
         for i in range(len(all_equations)):
             if all_equations[i][1] == 0:
+                check_again = True
                 # all variables left in equation equate to 0
                 for var in all_equations[i][0].free_symbols:
                     # add the var to tiles to open
@@ -147,17 +157,18 @@ def simplify_known_equations(all_equations: list, tiles_to_open: list):
                     # replace the var in all equations
                     replace_value_in_all_eq(all_equations, var, 0)
                     # changes were made so need to check again
-                    check_again = True
             if all_equations[i][1] == len(all_equations[i][0].free_symbols):
+                check_again = True
                 # all variable left in equation equate to 1
                 for var in all_equations[i][0].free_symbols:
                     if not SYMBOL_TO_TILE[var].is_flagged:
                         # flag the var as bomb
                         SYMBOL_TO_TILE[var].toggle_flag
+                        score += 1
                         # replace the var in all equations
                         replace_value_in_all_eq(all_equations, var, 1)
                         # changes were made so need to check again
-                        check_again = True
+
 
 def replace_value_in_all_eq(all_equations: list, var: Symbol, val: int):
     '''
@@ -171,7 +182,8 @@ def replace_value_in_all_eq(all_equations: list, var: Symbol, val: int):
             # subtract val from the RHS
             all_equations[i][1] = all_equations[i][1] - val
 
-def subset_reduction(all_equations: list, tiles_to_open: list): 
+
+def subset_reduction(all_equations: list, tiles_to_open: list):
     '''
     Reduces redundancies in equations
     i.e.
@@ -194,8 +206,9 @@ def subset_reduction(all_equations: list, tiles_to_open: list):
                 # eq1-eq2
                 all_equations[i][0] = eq1 - eq2
                 all_equations[i][1] = all_equations[i][1] - all_equations[j][1]
-                
-def double_inference(all_equations: list):
+
+
+def double_inference(all_equations: list, tiles_to_open: list):
     '''
     looks at 2 equations and if they share the some of the same variables, we may be able to infer more info
     eq1 = A+B+C+D =2
@@ -211,6 +224,7 @@ def double_inference(all_equations: list):
             # if they dont share any of the same variables cant get any new info
             if set1.isdisjoint(set2):
                 continue
+            # subtract the equation with a higher value from the other equation
             if all_equations[i][1] > all_equations[j][1]:
                 derived_eq = eq1-eq2
                 derived_val = all_equations[i][1] - all_equations[j][1]
@@ -219,6 +233,30 @@ def double_inference(all_equations: list):
                 derived_val = all_equations[j][1] - all_equations[i][1]
 
             # TODO FIGURE OUT WHAT WE NEED TO DO AFTER WE SUBTRACT 2 EQS
+                # if we just look at the value of the derived equation and the number of positive symbols
+                # if they are equal then we know that all are equal to 1 and if we
+
+            vars = derived_eq.free_symbols  # look at all symbols in derived eq
+            positive_vars = []
+            negative_vars = []
+            for var in vars:
+                # args for a+b+c-d-e will be (a,b,c, -d,-e), so if the free_symbol is in args, then it will be positive
+                if var in derived_eq.args:
+                    positive_vars.append(var)
+                else:
+                    negative_vars.append(var)
+
+            # then we know all symbols being added are 1 and all symbols being subtracted are = 0
+            if len(positive_vars) == derived_val:
+                for var in positive_vars:
+                    if not SYMBOL_TO_TILE[var].is_flagged:
+                        SYMBOL_TO_TILE.toggle_flag
+                        score += 1
+                    replace_value_in_all_eq(all_equations, var, 1)
+                for var in negative_vars:
+                    tiles_to_open.append(SYMBOL_TO_TILE[var])
+                    replace_value_in_all_eq(all_equations, var, 0)
+
 
 def random_tile_to_open(board: Board) -> BoardTile:
     """
