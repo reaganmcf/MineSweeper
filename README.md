@@ -1,5 +1,7 @@
 # MineSweeper
 
+![](./minesweeper.gif)
+
 ## Usage
 
 ### Arguments
@@ -66,4 +68,4 @@ source minesweepervenv/bin/activate
 ### 5. Update `requirements.txt` (Do this whenever you add a new library to the project so the change is reflected on github)
 ```bash
 (minesweepervenv) $ pip freeze > requirements.txt
--```
+```
