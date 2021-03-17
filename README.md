@@ -1,4 +1,5 @@
 # MineSweeper
+Logic based AI Algorithms to solve MineSweeper
 
 ![](./minesweeper.gif)
 
