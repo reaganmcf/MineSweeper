@@ -23,7 +23,7 @@ Knowledge Base:
 SYMBOL_TO_TILE = dict()
 
 
-def start(board: Board, agent: Agent, use_stepping: bool = False, lock_boolean = None):
+def start(board: Board, agent: Agent, use_stepping: bool = False, lock_boolean=None):
     """
     Start the advanced agent
     """
@@ -34,9 +34,6 @@ def start(board: Board, agent: Agent, use_stepping: bool = False, lock_boolean =
 
     # is the agent finished traversing (i.e. no more moves left)
     agent_done = False
-
-    # number of tiles flagged
-    score = 0
 
     # stores safe tiles that we want to open (holds tile objects)
     tiles_to_open = [start_tile]  # start at the agent starting position
@@ -57,7 +54,7 @@ def start(board: Board, agent: Agent, use_stepping: bool = False, lock_boolean =
 
         if not tiles_to_open:  # if the list to open new tiles is empty, then we must choose a new tile to get more information
             information_learned = inference(
-                board=board, unfinished_tiles=unfinished_tiles, tiles_to_open=tiles_to_open, score=score)
+                board=board, unfinished_tiles=unfinished_tiles, tiles_to_open=tiles_to_open)
             if information_learned:
                 print("infrence worked")
             if not information_learned:
@@ -65,9 +62,9 @@ def start(board: Board, agent: Agent, use_stepping: bool = False, lock_boolean =
                 random_tile = random_tile_to_open(board)
                 # ends the game, no tiles remaining to open
                 if not random_tile:
-                    print("GAME OVER, SCORE = ", score)
+                    print("GAME OVER, score=", board.get_score())
+                    return board.get_score()
                     # pygame.event.post(pygame.event.Event(pygame.QUIT, attr1={"Score": score})) #THIS CLOSES THE SCREEN TOO FAST
-                    return score
                 tiles_to_open.append(random_tile)
 
         if tiles_to_open:  # if we found a tile to open, we may have just flagged tiles in our inference methods
@@ -86,16 +83,16 @@ def start(board: Board, agent: Agent, use_stepping: bool = False, lock_boolean =
             if curr_tile.type == TILES.MINE:
                 continue
 
-            score = check_neighbors(
-                curr_tile, board, unfinished_tiles, tiles_to_open, score)
+            check_neighbors(
+                curr_tile, board, unfinished_tiles, tiles_to_open)
 
         # since we add elements back into the queue, we only want to iterate a specific amount of times
         for i in range(len(unfinished_tiles)):
             # we want to remove the top element from the queue
             tile = unfinished_tiles.pop(0)
-            score = check_neighbors(
-                tile, board, unfinished_tiles, tiles_to_open, score)
-        
+            check_neighbors(
+                tile, board, unfinished_tiles, tiles_to_open)
+
         if use_stepping:
             lock_boolean.set(True)
 
@@ -145,27 +142,28 @@ def build_knowledge_base(board: Board, unfinished_tiles: list) -> list:
     return all_equations
 
 
-def inference(board: Board, unfinished_tiles: list, tiles_to_open: list, score: int):
+def inference(board: Board, unfinished_tiles: list, tiles_to_open: list):
     all_equations = build_knowledge_base(
         board=board, unfinished_tiles=unfinished_tiles)
-    print("kb built")
-    for eq in all_equations:
-        print(eq)
+    # print("kb built")
+
     new_info_learned = False
     subset_reduction(all_equations=all_equations, tiles_to_open=tiles_to_open)
-    print("subset reduced")
+    # print("subset reduced")
+    # for eq in all_equations:
+    #     print(eq)
     new_info_learned = simplify_known_equations(all_equations=all_equations,
-                                                tiles_to_open=tiles_to_open, score=score)
+                                                tiles_to_open=tiles_to_open)
     print("simplify 1")
     if new_info_learned:  # early termination, dont waste time on unnessary inferences that can be easily found a few steps down the line
         return True
     new_info_learned = double_inference(
-        all_equations=all_equations, tiles_to_open=tiles_to_open, score=score)
+        all_equations=all_equations, tiles_to_open=tiles_to_open)
     print("double inference")
     if new_info_learned:
         return True
     new_info_learned = simplify_known_equations(all_equations=all_equations,
-                                                tiles_to_open=tiles_to_open, score=score)
+                                                tiles_to_open=tiles_to_open)
     print("simplify 2")
     if new_info_learned:
         return True
@@ -173,7 +171,7 @@ def inference(board: Board, unfinished_tiles: list, tiles_to_open: list, score: 
     return False
 
 
-def simplify_known_equations(all_equations: list, tiles_to_open: list, score: int) -> bool:
+def simplify_known_equations(all_equations: list, tiles_to_open: list) -> bool:
     '''
     Simplifies the equation so that if we know all vars =0 or all vars=1 we can replace all vals and simplify other eqs as well
     '''
@@ -183,9 +181,12 @@ def simplify_known_equations(all_equations: list, tiles_to_open: list, score: in
 
     # while more simplification is possible
     while check_again:
+        all_equations[:] = [eq for eq in all_equations if eq !=
+                            [0, 0]]  # remove all solved equations
         check_again = False
         for i in range(len(all_equations)):
             if all_equations[i][1] == 0:
+                print(all_equations[i])
                 check_again = True
                 new_info_learned = True
                 # all variables left in equation equate to 0
@@ -195,18 +196,23 @@ def simplify_known_equations(all_equations: list, tiles_to_open: list, score: in
                     # replace the var in all equations
                     replace_value_in_all_eq(all_equations, var, 0)
                     # changes were made so need to check again
+                # remove the equation from all_eqs
             if all_equations[i][1] == len(all_equations[i][0].free_symbols):
+                print(all_equations[i])
                 check_again = True
                 new_info_learned = True
                 # all variable left in equation equate to 1
                 for var in all_equations[i][0].free_symbols:
                     if not SYMBOL_TO_TILE[var].is_flagged:
                         # flag the var as bomb
-                        SYMBOL_TO_TILE[var].toggle_flag
-                        score += 1
+                        print("FLAGGING IN SIMPLIFY")
+                        tile = SYMBOL_TO_TILE[var]
+                        tile.toggle_flag()
                         # replace the var in all equations
                         replace_value_in_all_eq(all_equations, var, 1)
                         # changes were made so need to check again
+        # remove all solved equaitons
+        all_equations[:] = [eq for eq in all_equations if eq != [0, 0]]
     return new_info_learned
 
 
@@ -248,7 +254,7 @@ def subset_reduction(all_equations: list, tiles_to_open: list):
                 all_equations[i][1] = all_equations[i][1] - all_equations[j][1]
 
 
-def double_inference(all_equations: list, tiles_to_open: list, score: int):
+def double_inference(all_equations: list, tiles_to_open: list):
     '''
     looks at 2 equations and if they share the some of the same variables, we may be able to infer more info
     eq1 = A+B+C+D =2
@@ -293,8 +299,7 @@ def double_inference(all_equations: list, tiles_to_open: list, score: int):
                 new_information_learned = True
                 for var in positive_vars:
                     if not SYMBOL_TO_TILE[var].is_flagged:
-                        SYMBOL_TO_TILE.toggle_flag
-                        score += 1
+                        SYMBOL_TO_TILE[var].toggle_flag()
                     replace_value_in_all_eq(all_equations, var, 1)
                 for var in negative_vars:
                     tiles_to_open.append(SYMBOL_TO_TILE[var])
@@ -321,7 +326,7 @@ def random_tile_to_open(board: Board) -> BoardTile:
     return random_tile
 
 
-def check_neighbors(curr_tile: BoardTile, board: Board, unfinished_tiles: list, tiles_to_open: list, score: int):
+def check_neighbors(curr_tile: BoardTile, board: Board, unfinished_tiles: list, tiles_to_open: list):
     """
     looks at all neighbors for the current tiles, if it satisfies requirements, 
     it will either flag the neighboring tiles or add them to the tiles_to_open list
@@ -353,8 +358,6 @@ def check_neighbors(curr_tile: BoardTile, board: Board, unfinished_tiles: list, 
                 tile.toggle_flag()
                 print("FLAGGED TILE")
                 print(tile.i, tile.j)
-                score += 1
-                print("Score = ", score)
     elif total_unopened_neighbors != 0:  # if the current tile still has unopened tiles, then we are not done with it
         unfinished_tiles.append(curr_tile)
-    return score
+    return
