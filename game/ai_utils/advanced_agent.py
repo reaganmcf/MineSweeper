@@ -280,9 +280,8 @@ def double_inference(all_equations: list, tiles_to_open: list):
                 derived_eq = eq2 - eq1
                 derived_val = all_equations[j][1] - all_equations[i][1]
 
-            # TODO FIGURE OUT WHAT WE NEED TO DO AFTER WE SUBTRACT 2 EQS
-                # if we just look at the value of the derived equation and the number of positive symbols
-                # if they are equal then we know that all are equal to 1 and if we
+            # if we just look at the value of the derived equation and the number of positive symbols
+            # if they are equal then we know that all are equal to 1 and if we
 
             vars = derived_eq.free_symbols  # look at all symbols in derived eq
             positive_vars = []
@@ -296,6 +295,8 @@ def double_inference(all_equations: list, tiles_to_open: list):
 
             # then we know all symbols being added are 1 and all symbols being subtracted are = 0
             if len(positive_vars) == derived_val:
+                if derived_eq == 0:
+                    continue
                 new_information_learned = True
                 for var in positive_vars:
                     if not SYMBOL_TO_TILE[var].is_flagged:
