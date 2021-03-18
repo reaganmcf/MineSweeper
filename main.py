@@ -8,6 +8,7 @@ from game.core.constants import DEFAULT_DIM, DEFAULT_BOMB_COUNT, GAME_STATE, WIN
 from game.board_utils.board import Board
 from game.core.agent import Agent
 from game.ai_utils import advanced_agent, basic_agent
+from game.boolean_reference import BooleanReference
 
 # Arguments
 parser = argparse.ArgumentParser(description="Options")
@@ -45,19 +46,21 @@ agent = Agent(i=0, j=0, screen=board.screen, board=board)
 
 # debug flags
 dbg_show_bombs = False
-dbg_use_stepping = args.use_stepping
+# boolean reference for stepping debug feature
+use_stepping = args.use_stepping
+lock_boolean = BooleanReference(args.use_stepping)
 
 # Start AI Thread
 basic_ai_thread = None
 advanced_ai_thread = None
 if args.agent == "basic":
     print("Using AI agent - manual mode still enabled")
-    basic_ai_thread = Thread(target=basic_agent.start, args=(board, agent, dbg_use_stepping))
+    basic_ai_thread = Thread(target=basic_agent.start, args=(board, agent, use_stepping, lock_boolean))
     basic_ai_thread.start()
 elif args.agent == "advanced":
     print("Using Advanced AI agent - manual mode still enabled")
     advanced_ai_thread = Thread(
-        target=advanced_agent.start, args=(board, agent, dbg_use_stepping))
+        target=advanced_agent.start, args=(board, agent, use_stepping, lock_boolean))
     advanced_ai_thread.start()
 elif args.agent == "none":
     print("No agent being used - manual mode enabled")
@@ -73,9 +76,14 @@ while board.game_state != GAME_STATE.STOPPED:
             board.set_game_state(GAME_STATE.STOPPED)
             if basic_ai_thread != None:
                 basic_ai_thread.join()
+            if advanced_ai_thread != None:
+                advanced_ai_thread.join()
 
         # Keyboard Press Events
         elif event.type == pygame.KEYDOWN:
+            if event.key == pygame.K_n:
+                # allow step forward
+                lock_boolean.set(False)
             if event.key == pygame.K_DOWN:
                 agent.move_down()
             elif event.key == pygame.K_UP:
