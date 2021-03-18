@@ -23,7 +23,7 @@ Knowledge Base:
 SYMBOL_TO_TILE = dict()
 
 
-def start(board: Board, agent: Agent):
+def start(board: Board, agent: Agent, use_stepping: bool = False):
     """
     Start the advanced agent
     """
@@ -44,10 +44,25 @@ def start(board: Board, agent: Agent):
     # store visited tiles that we are not done with, tiles who still has unflagged/unopened neighbors (holds tile objects)
     unfinished_tiles = []
 
+    # waiting for step
+    waiting_for_step = use_stepping
+
     while(not agent_done):
-        time.sleep(5)
+        time.sleep(0.1)
+        # force re-render
         pygame.event.post(pygame.event.Event(
             pygame.USEREVENT, attr1="force rerender"))
+
+        # if use_stepping is enabled, then we want to spin lock until "n" is pressed
+        if use_stepping:
+            time.sleep(0.1)
+            print("SPIN LOCK - Waiting for 'n' KeyPress before continuing")
+            while waiting_for_step:
+                for event in pygame.event.get():
+                    if event.type == pygame.KEYDOWN:
+                        if event.key == pygame.K_n:
+                            waiting_for_step = False
+        waiting_for_step = True
 
         if not tiles_to_open:  # if the list to open new tiles is empty, then we must choose a new tile to get more information
             information_learned = inference(

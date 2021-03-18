@@ -12,6 +12,7 @@ Logic based AI Algorithms to solve MineSweeper
 |`--dim`|`int`|Dimension of the minesweeper board|
 |`--agent`|`none\|basic\|advanced`|Which agent to use (if any)|
 |`--bomb_count`|`int`|Number of bombs to place randomly across the board|
+|`--use_stepping`|`bool`|Whether or not to use wait for input between agent solving steps. Great for debuging|
 
 ### Example
 Refer to _DEVELOPMENT_ for how to setup virtualenv
@@ -35,6 +36,7 @@ $ python3 main.py --agent basic --dim 25 --bomb_count 20
 |---|----------------------------|
 |`s`|Hold down to highlight bombs|
 |`r`|Re-initialize board tiles   |
+|`n`|If `--use_stepping` flag is set, steps the agent forward one step|
 
 ---
 

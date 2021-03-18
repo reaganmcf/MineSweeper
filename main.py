@@ -20,6 +20,9 @@ parser.add_argument(
 parser.add_argument(
     "--agent", help="Which agent to use, either `basic`|`advanced`|`none`", type=str)
 
+parser.add_argument(
+    "--use_stepping", help="DEBUG: Wait for keypress between agent events?", type=bool, default=False)
+
 args = parser.parse_args()
 
 # Game clock and event loop as well as game_state
@@ -42,18 +45,19 @@ agent = Agent(i=0, j=0, screen=board.screen, board=board)
 
 # debug flags
 dbg_show_bombs = False
+dbg_use_stepping = args.use_stepping
 
 # Start AI Thread
 basic_ai_thread = None
 advanced_ai_thread = None
 if args.agent == "basic":
     print("Using AI agent - manual mode still enabled")
-    basic_ai_thread = Thread(target=basic_agent.start, args=(board, agent))
+    basic_ai_thread = Thread(target=basic_agent.start, args=(board, agent, dbg_use_stepping))
     basic_ai_thread.start()
 elif args.agent == "advanced":
     print("Using Advanced AI agent - manual mode still enabled")
     advanced_ai_thread = Thread(
-        target=advanced_agent.start, args=(board, agent))
+        target=advanced_agent.start, args=(board, agent, dbg_use_stepping))
     advanced_ai_thread.start()
 elif args.agent == "none":
     print("No agent being used - manual mode enabled")
