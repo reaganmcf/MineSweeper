@@ -11,14 +11,6 @@ WINDOW_WIDTH, WINDOW_HEIGHT = (800, 800)
 DEFAULT_DIM, DEFAULT_BOMB_COUNT = 10, 12
 BACKGROUND_COLOR = pygame.Color(29, 31, 33)
 
-
-# Custom PyGame Events for the AI to send 
-EVENT_MOVE_UP = pygame.event.Event(pygame.USEREVENT, attr1="EVENT_MOVE_UP")
-EVENT_MOVE_DOWN = pygame.event.Event(pygame.USEREVENT, attr1="EVENT_MOVE_DOWN")
-EVENT_MOVE_LEFT = pygame.event.Event(pygame.USEREVENT, attr1="EVENT_MOVE_LEFT")
-EVENT_MOVE_RIGHT = pygame.event.Event(pygame.USEREVENT, attr1="EVENT_MOVE_RIGHT")
-EVENT_OPEN_TILE = pygame.event.Event(pygame.USEREVENT, attr1="EVENT_OPEN_TILE")
-
 # game states
 class GAME_STATE(enum.Enum):
     RUNNING = 0

@@ -4,7 +4,7 @@ import pygame
 from threading import Thread
 
 from pygame.locals import QUIT
-from game.core.constants import DEFAULT_DIM, DEFAULT_BOMB_COUNT, GAME_STATE, WINDOW_WIDTH, WINDOW_HEIGHT, BACKGROUND_COLOR, EVENT_MOVE_UP, EVENT_MOVE_DOWN, EVENT_MOVE_LEFT, EVENT_MOVE_RIGHT, EVENT_OPEN_TILE
+from game.core.constants import DEFAULT_DIM, DEFAULT_BOMB_COUNT, GAME_STATE, WINDOW_WIDTH, WINDOW_HEIGHT, BACKGROUND_COLOR
 from game.board_utils.board import Board
 from game.core.agent import Agent
 from game.ai_utils import advanced_agent, basic_agent
@@ -14,15 +14,18 @@ from game.boolean_reference import BooleanReference
 parser = argparse.ArgumentParser(description="Options")
 # Add Arguments
 parser.add_argument("--dim", help="dimension of the grid",
-                    default=DEFAULT_DIM, type=int)
+                    default=DEFAULT_DIM, required=True, type=int)
 parser.add_argument(
-    "--bomb_count", help="number of bombs to be placed randomly in the grid", default=DEFAULT_BOMB_COUNT, type=int)
+    "--bomb_count", help="number of bombs to be placed randomly in the grid", required=True, default=DEFAULT_BOMB_COUNT, type=int)
 
 parser.add_argument(
-    "--agent", help="Which agent to use, either `basic`|`advanced`|`none`", type=str)
+    "--agent", help="Which agent to use, either `basic`|`advanced`|`none`", required=True, choices=["basic", "advanced", "none"], type=str)
 
 parser.add_argument(
     "--use_stepping", help="DEBUG: Wait for keypress between agent events?", type=bool, default=False)
+
+parser.add_argument(
+    "--quit_when_finished", help="Quit when finished. Useful when averaging multiple scores.", type=bool, default=False)
 
 args = parser.parse_args()
 
@@ -78,7 +81,14 @@ while board.game_state != GAME_STATE.STOPPED:
                 basic_ai_thread.join()
             if advanced_ai_thread != None:
                 advanced_ai_thread.join()
-
+        
+        # there are 2 userevents that get sent - 1 is a re-render event
+        # and the other is the game score event after the agent is finished
+        elif event.type == pygame.USEREVENT and not hasattr(event, "render"):
+            print(f"agent = {args.agent}, dim = {args.dim}, bomb_count = {args.bomb_count}, score = {event.score}")
+            if args.quit_when_finished:
+                pygame.event.post(pygame.event.Event(pygame.QUIT))
+            
         # Keyboard Press Events
         elif event.type == pygame.KEYDOWN:
             if event.key == pygame.K_n:
@@ -106,7 +116,7 @@ while board.game_state != GAME_STATE.STOPPED:
         elif event.type == pygame.KEYUP:
             # turn off debug commands
             dbg_show_bombs = False
-
+        
         # rendering stuff
         board.screen.fill(BACKGROUND_COLOR)
         board.draw(dbg_show_bombs=dbg_show_bombs)

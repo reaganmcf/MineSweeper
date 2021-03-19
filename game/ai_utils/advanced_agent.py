@@ -1,7 +1,7 @@
 import pygame
 import numpy as np
 from sympy import Symbol, linsolve, linear_eq_to_matrix, solveset, FiniteSet, Eq, S, symbols, simplify, solve, And, satisfiable, Or
-from ..core.constants import GAME_STATE, EVENT_MOVE_UP, EVENT_MOVE_DOWN, EVENT_MOVE_LEFT, EVENT_MOVE_RIGHT, EVENT_OPEN_TILE, TILES
+from ..core.constants import GAME_STATE, TILES
 from ..board_utils.board import Board
 from ..core.agent import Agent
 import time
@@ -42,10 +42,10 @@ def start(board: Board, agent: Agent, use_stepping: bool = False, lock_boolean=N
     unfinished_tiles = []
 
     while(not agent_done):
-        time.sleep(0.1)
+        time.sleep(0.03)
         # force re-render
-        pygame.event.post(pygame.event.Event(
-            pygame.USEREVENT, attr1="force rerender"))
+        pygame.event.post(pygame.event.Event(pygame.USEREVENT, render=True)) 
+       
 
         # if use_stepping is enabled, then we want to skip render / logic
         if use_stepping:
@@ -63,8 +63,8 @@ def start(board: Board, agent: Agent, use_stepping: bool = False, lock_boolean=N
                 # ends the game, no tiles remaining to open
                 if not random_tile:
                     print("GAME OVER, score=", board.get_score())
+                    pygame.event.post(pygame.event.Event(pygame.USEREVENT, score=board.get_score()))
                     return board.get_score()
-                    # pygame.event.post(pygame.event.Event(pygame.QUIT, attr1={"Score": score})) #THIS CLOSES THE SCREEN TOO FAST
                 tiles_to_open.append(random_tile)
 
         if tiles_to_open:  # if we found a tile to open, we may have just flagged tiles in our inference methods
@@ -95,6 +95,8 @@ def start(board: Board, agent: Agent, use_stepping: bool = False, lock_boolean=N
 
         if use_stepping:
             lock_boolean.set(True)
+
+
 
 
 def gen_symbol_to_tile(board: Board):

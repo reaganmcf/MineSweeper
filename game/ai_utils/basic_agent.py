@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 import pygame
-from ..core.constants import GAME_STATE, EVENT_MOVE_UP, EVENT_MOVE_DOWN, EVENT_MOVE_LEFT, EVENT_MOVE_RIGHT, EVENT_OPEN_TILE, TILES
+from ..core.constants import GAME_STATE, TILES
 from ..board_utils.board import Board
 from ..core.agent import Agent
 import time
@@ -28,9 +28,9 @@ def start(board: Board, agent: Agent, use_stepping: bool = False, lock_boolean =
     unfinished_tiles = []
     
     while(not agent_done):
-        time.sleep(0.1)
+        time.sleep(0.02)
         # force re-render
-        pygame.event.post(pygame.event.Event(pygame.USEREVENT, attr1="force rerender"))
+        pygame.event.post(pygame.event.Event(pygame.USEREVENT, render=True))
         
         # If use_stepping is enabled, then we want to spin lock until "n" is pressed
         if use_stepping:
@@ -43,7 +43,7 @@ def start(board: Board, agent: Agent, use_stepping: bool = False, lock_boolean =
             #ends the game, no tiles remaining to open
             if not random_tile:
                 print("GAME OVER, SCORE = ", score)
-                #pygame.event.post(pygame.event.Event(pygame.QUIT, attr1={"Score": score})) #THIS CLOSES THE SCREEN TOO FAST
+                pygame.event.post(pygame.event.Event(pygame.USEREVENT, score=board.get_score()))
                 return score
             tiles_to_open.append(random_tile)
         
