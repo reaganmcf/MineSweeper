@@ -8,6 +8,7 @@ import time
 import random
 from ..board_utils.board_tile import BoardTile
 from ..core.constants import TILES
+from queue import PriorityQueue
 
 """
 Types of Operations:
@@ -362,3 +363,15 @@ def check_neighbors(curr_tile: BoardTile, board: Board, unfinished_tiles: list, 
     elif total_unopened_neighbors != 0:  # if the current tile still has unopened tiles, then we are not done with it
         unfinished_tiles.append(curr_tile)
     return
+
+
+def proof_by_contradiction(all_equations: list, tiles_to_open: list):
+    vars_ordered = PriorityQueue()
+    vars_num_eq = dict()
+    for eq in all_equations:
+        for var in eq[0].free_symbols:
+            vars_num_eq[var] = vars_num_eq.get(var, 0) + 1
+    for key in vars_num_eq.keys():
+        val = vars_num_eq[key]
+        # ORDER FROM GREATEST TO LEAST SO WE USE NEGATIVE (THERE IS PROB A BETTER WAY)
+        vars_ordered.put(-val, key)
