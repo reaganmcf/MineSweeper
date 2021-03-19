@@ -8,11 +8,13 @@ import time
 import random
 from ..board_utils.board_tile import BoardTile
 from ..core.constants import TILES
+from queue import PriorityQueue
+from copy import deepcopy
 
 """
 Types of Operations:
-    - we will first conduct subset reduction 
-    - 
+    - we will first conduct subset reduction
+    -
 """
 
 """
@@ -23,7 +25,14 @@ Knowledge Base:
 SYMBOL_TO_TILE = dict()
 
 
-def start(board: Board, agent: Agent, use_stepping: bool = False, lock_boolean=None):
+def start_outside(board: Board, agent: Agent, use_stepping: bool = False, lock_boolean=None):
+    """
+    start for hyper_advanced_agent.py
+    """
+    start(board, agent, use_stepping, lock_boolean, True)
+
+
+def start(board: Board, agent: Agent, use_stepping: bool = False, lock_boolean=None, hyper_advanced: bool = False):
     """
     Start the advanced agent
     """
@@ -54,7 +63,7 @@ def start(board: Board, agent: Agent, use_stepping: bool = False, lock_boolean=N
 
         if not tiles_to_open:  # if the list to open new tiles is empty, then we must choose a new tile to get more information
             information_learned = inference(
-                board=board, unfinished_tiles=unfinished_tiles, tiles_to_open=tiles_to_open)
+                board=board, unfinished_tiles=unfinished_tiles, tiles_to_open=tiles_to_open, hyper_advanced=hyper_advanced)
             if information_learned:
                 print("infrence worked")
             if not information_learned:
@@ -121,7 +130,8 @@ def build_knowledge_base(board: Board, unfinished_tiles: list) -> list:
         # since we only call this method when we have no more information we can collect using
         # the basic agent, unopened_neighbors should never have a length of 0.
         # But, just in case we assert
-        assert len(unopened_neighbors) != 0
+        if len(unopened_neighbors) == 0:
+            continue
 
         val = tile.type.value - len(mine_flagged_neighbors)
 
@@ -144,7 +154,7 @@ def build_knowledge_base(board: Board, unfinished_tiles: list) -> list:
     return all_equations
 
 
-def inference(board: Board, unfinished_tiles: list, tiles_to_open: list):
+def inference(board: Board, unfinished_tiles: list, tiles_to_open: list, hyper_advanced: bool):
     all_equations = build_knowledge_base(
         board=board, unfinished_tiles=unfinished_tiles)
     # print("kb built")
@@ -156,24 +166,30 @@ def inference(board: Board, unfinished_tiles: list, tiles_to_open: list):
     #     print(eq)
     new_info_learned = simplify_known_equations(all_equations=all_equations,
                                                 tiles_to_open=tiles_to_open)
-    print("simplify 1")
+    #print("simplify 1")
     if new_info_learned:  # early termination, dont waste time on unnessary inferences that can be easily found a few steps down the line
         return True
     new_info_learned = double_inference(
         all_equations=all_equations, tiles_to_open=tiles_to_open)
-    print("double inference")
+    #print("double inference")
     if new_info_learned:
         return True
     new_info_learned = simplify_known_equations(all_equations=all_equations,
                                                 tiles_to_open=tiles_to_open)
-    print("simplify 2")
+    #print("simplify 2")
     if new_info_learned:
         return True
-    # we can add constraint satisfaction here
-    return False
+    if not hyper_advanced:
+        return new_info_learned
+    new_info_learned = proof_by_contradiction(
+        all_equations=all_equations, tiles_to_open=tiles_to_open)
+    if new_info_learned:
+        print("!!!PROOF FOUND SOMETHING!!!")
+    #print("proof by contradiction")
+    return new_info_learned
 
 
-def simplify_known_equations(all_equations: list, tiles_to_open: list) -> bool:
+def simplify_known_equations(all_equations: list, tiles_to_open: list, flag_tiles: bool = True) -> bool:
     '''
     Simplifies the equation so that if we know all vars =0 or all vars=1 we can replace all vals and simplify other eqs as well
     '''
@@ -188,7 +204,6 @@ def simplify_known_equations(all_equations: list, tiles_to_open: list) -> bool:
         check_again = False
         for i in range(len(all_equations)):
             if all_equations[i][1] == 0:
-                print(all_equations[i])
                 check_again = True
                 new_info_learned = True
                 # all variables left in equation equate to 0
@@ -200,19 +215,20 @@ def simplify_known_equations(all_equations: list, tiles_to_open: list) -> bool:
                     # changes were made so need to check again
                 # remove the equation from all_eqs
             if all_equations[i][1] == len(all_equations[i][0].free_symbols):
-                print(all_equations[i])
+                # print("ALL ARE 1", all_equations[i])
                 check_again = True
                 new_info_learned = True
                 # all variable left in equation equate to 1
                 for var in all_equations[i][0].free_symbols:
-                    if not SYMBOL_TO_TILE[var].is_flagged:
+                    if not SYMBOL_TO_TILE[var].is_flagged and flag_tiles:
                         # flag the var as bomb
-                        print("FLAGGING IN SIMPLIFY")
+                        #print("FLAGGING IN SIMPLIFY")
                         tile = SYMBOL_TO_TILE[var]
                         tile.toggle_flag()
                         # replace the var in all equations
-                        replace_value_in_all_eq(all_equations, var, 1)
-                        # changes were made so need to check again
+                    replace_value_in_all_eq(all_equations, var, 1)
+                    # changes were made so need to check again
+                # print("AFTER REPLACE  =", all_equations[i][0])
         # remove all solved equaitons
         all_equations[:] = [eq for eq in all_equations if eq != [0, 0]]
     return new_info_learned
@@ -220,7 +236,7 @@ def simplify_known_equations(all_equations: list, tiles_to_open: list) -> bool:
 
 def replace_value_in_all_eq(all_equations: list, var: Symbol, val: int):
     '''
-    Removes all instances of the variables in the list of equations and updates the value of the equation accordingly 
+    Removes all instances of the variables in the list of equations and updates the value of the equation accordingly
     '''
     for i in range(len(all_equations)):
         # if the var is in equation i
@@ -312,7 +328,7 @@ def double_inference(all_equations: list, tiles_to_open: list):
 
 def random_tile_to_open(board: Board) -> BoardTile:
     """
-    Pick a random tile to restart at by looking at board and choosing which 
+    Pick a random tile to restart at by looking at board and choosing which
     """
     available_tiles = []
     for tilelist in board.tiles:
@@ -331,7 +347,7 @@ def random_tile_to_open(board: Board) -> BoardTile:
 
 def check_neighbors(curr_tile: BoardTile, board: Board, unfinished_tiles: list, tiles_to_open: list):
     """
-    looks at all neighbors for the current tiles, if it satisfies requirements, 
+    looks at all neighbors for the current tiles, if it satisfies requirements,
     it will either flag the neighboring tiles or add them to the tiles_to_open list
     returns the score (if we flag tiles, we want to increment score)
     """
@@ -364,3 +380,109 @@ def check_neighbors(curr_tile: BoardTile, board: Board, unfinished_tiles: list, 
     elif total_unopened_neighbors != 0:  # if the current tile still has unopened tiles, then we are not done with it
         unfinished_tiles.append(curr_tile)
     return
+
+
+def proof_by_contradiction(all_equations: list, tiles_to_open: list) -> bool:
+
+    # oreders vars by the number of times they appear in constraints
+    vars_ordered = []
+
+    vars_num_eq = dict()  # dict for number of times vars appear
+    # build dict
+    for eq in all_equations:
+        for var in eq[0].free_symbols:
+            vars_num_eq[var] = vars_num_eq.get(var, 0) + 1
+    # put vals in priority queue
+    for key in vars_num_eq.keys():
+        val = vars_num_eq[key]
+        # ORDER FROM GREATEST TO LEAST SO WE USE NEGATIVE (THERE IS PROB A BETTER WAY)
+        vars_ordered.append([val, key])
+    vars_ordered = sorted(vars_ordered, key=lambda x: x[0])
+    # for each value try plugging in 1 and 0, if we find a contradiction in one and dont find a contradiction  in the other, we know it is that value
+    while vars_ordered:
+        var = vars_ordered.pop()[1]  # get the next var with most constraints
+        # print("var = ", var)
+        # copy KB for replacing var's value with 0
+        copy_KB_0 = deepcopy(all_equations)
+        # copy KB for replacing var's value with 1
+        copy_KB_1 = deepcopy(all_equations)
+        replace_value_in_all_eq(copy_KB_0, var, 0)
+        replace_value_in_all_eq(copy_KB_1, var, 1)
+        # true if inconsistient, false if consistient
+        inconsistient_0 = find_inconsistiencies(copy_KB_0)
+        inconsistient_1 = find_inconsistiencies(copy_KB_1)
+        # print("Inconstient 0 =", inconsistient_0,"inconsistient 1= ", inconsistient_1)
+        if not inconsistient_0 and not inconsistient_1:  # both configs work
+            continue
+        # tile should be flagged (0 does not work, but 1 does)
+        if inconsistient_0 and not inconsistient_1:
+            if not SYMBOL_TO_TILE[var].is_flagged:
+                SYMBOL_TO_TILE[var].toggle_flag()
+            return True
+        # tile should be open (1 does not work, but 0 does)
+        if not inconsistient_0 and inconsistient_1:
+            tiles_to_open.append(SYMBOL_TO_TILE[var])
+            return True
+        if inconsistient_0 and inconsistient_1:  # both dont work, something wrong, should never hit this
+            print("KB BROKEN")
+            return False
+    return False
+
+
+def find_inconsistiencies(all_equations: list) -> bool:
+    subset_reduction(all_equations=all_equations, tiles_to_open=[])
+    simplify_known_equations(all_equations=all_equations,
+                             tiles_to_open=[], flag_tiles=False)
+    # print("find 2")
+    for eq in all_equations:
+        if eq[1] < 0:
+            return True
+        if len(eq[0].free_symbols) < eq[1]:
+            return True
+    # print("find 3")
+    x = double_inference_inconsistency(all_equations=all_equations)
+    # print("find 4")
+    return x
+
+
+def double_inference_inconsistency(all_equations: list):
+    '''
+    looks at 2 equations and if they share the some of the same variables, it will check if the equations are still consistient
+    '''
+
+    for i in range(len(all_equations)):
+        for j in range(i+1, len(all_equations)):
+            eq1 = all_equations[i][0]
+            eq2 = all_equations[j][0]
+            set1 = eq1.free_symbols
+            set2 = eq2.free_symbols
+            # if they dont share any of the same variables cant get any new info
+            if set1.isdisjoint(set2):
+                continue
+            # subtract the equation with a higher value from the other equation
+            if all_equations[i][1] > all_equations[j][1]:
+                derived_eq = eq1-eq2
+                derived_val = all_equations[i][1] - all_equations[j][1]
+            else:
+                derived_eq = eq2 - eq1
+                derived_val = all_equations[j][1] - all_equations[i][1]
+
+            # if we just look at the value of the derived equation and the number of positive symbols
+
+            vars = derived_eq.free_symbols  # look at all symbols in derived eq
+            positive_vars = []
+            negative_vars = []
+            for var in vars:
+                # args for a+b+c-d-e will be (a,b,c, -d,-e), so if the free_symbol is in args, then it will be positive
+                if var in derived_eq.args:
+                    positive_vars.append(var)
+                else:
+                    negative_vars.append(var)
+            # an equation will be inconstient if its value is less than 0
+            if derived_val < 0:
+                return True
+            # an equation will be inconsistient if the cardinality of all psoitive variables is less than value (forces a neagtive value to be < 0 or a positive value to be > 1)
+            if len(positive_vars) < derived_val:
+                return True
+
+    return False
