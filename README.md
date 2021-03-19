@@ -10,7 +10,7 @@ Logic based AI Algorithms to solve MineSweeper
 |Flag| Type | Description |
 |----------|------|-------------|
 |`--dim`|`int`|Dimension of the minesweeper board|
-|`--agent`|`none\|basic\|advanced`|Which agent to use (if any)|
+|`--agent`|`none\|basic\|advanced\|hyper_advanced`|Which agent to use|
 |`--bomb_count`|`int`|Number of bombs to place randomly across the board|
 |`--use_stepping`|`bool`|Whether or not to use wait for input between agent solving steps. Great for debuging|
 
