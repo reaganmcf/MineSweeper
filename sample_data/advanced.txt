@@ -1,0 +1,5 @@
+BOMB_COUNT = 0
+	agent = advanced, dim = 20, bomb_count = 0, score = 0
+BOMB_COUNT = 40
+	agent = advanced, dim = 20, bomb_count = 40, score = 40
+BOMB_COUNT = 80
