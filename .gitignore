@@ -3,3 +3,4 @@ minesweepervenv
 __pycache__/
 .vscode/*
 .vscode/settings.json
+.ipynb_checkpoints/
