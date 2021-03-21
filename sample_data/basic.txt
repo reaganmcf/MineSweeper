@@ -1,0 +1,121 @@
+BOMB_COUNT = 0
+	agent = basic, dim = 20, bomb_count = 0, score = 0
+	agent = basic, dim = 20, bomb_count = 0, score = 0
+	agent = basic, dim = 20, bomb_count = 0, score = 0
+	agent = basic, dim = 20, bomb_count = 0, score = 0
+	agent = basic, dim = 20, bomb_count = 0, score = 0
+	agent = basic, dim = 20, bomb_count = 0, score = 0
+	agent = basic, dim = 20, bomb_count = 0, score = 0
+	agent = basic, dim = 20, bomb_count = 0, score = 0
+	agent = basic, dim = 20, bomb_count = 0, score = 0
+	agent = basic, dim = 20, bomb_count = 0, score = 0
+BOMB_COUNT = 40
+	agent = basic, dim = 20, bomb_count = 40, score = 38
+	agent = basic, dim = 20, bomb_count = 40, score = 40
+	agent = basic, dim = 20, bomb_count = 40, score = 40
+	agent = basic, dim = 20, bomb_count = 40, score = 39
+	agent = basic, dim = 20, bomb_count = 40, score = 40
+	agent = basic, dim = 20, bomb_count = 40, score = 38
+	agent = basic, dim = 20, bomb_count = 40, score = 40
+	agent = basic, dim = 20, bomb_count = 40, score = 40
+	agent = basic, dim = 20, bomb_count = 40, score = 38
+	agent = basic, dim = 20, bomb_count = 40, score = 40
+BOMB_COUNT = 80
+	agent = basic, dim = 20, bomb_count = 80, score = 78
+	agent = basic, dim = 20, bomb_count = 80, score = 74
+	agent = basic, dim = 20, bomb_count = 80, score = 77
+	agent = basic, dim = 20, bomb_count = 80, score = 69
+	agent = basic, dim = 20, bomb_count = 80, score = 78
+	agent = basic, dim = 20, bomb_count = 80, score = 78
+	agent = basic, dim = 20, bomb_count = 80, score = 73
+	agent = basic, dim = 20, bomb_count = 80, score = 76
+	agent = basic, dim = 20, bomb_count = 80, score = 80
+	agent = basic, dim = 20, bomb_count = 80, score = 75
+BOMB_COUNT = 120
+	agent = basic, dim = 20, bomb_count = 120, score = 85
+	agent = basic, dim = 20, bomb_count = 120, score = 87
+	agent = basic, dim = 20, bomb_count = 120, score = 89
+	agent = basic, dim = 20, bomb_count = 120, score = 89
+	agent = basic, dim = 20, bomb_count = 120, score = 97
+	agent = basic, dim = 20, bomb_count = 120, score = 95
+	agent = basic, dim = 20, bomb_count = 120, score = 86
+	agent = basic, dim = 20, bomb_count = 120, score = 97
+	agent = basic, dim = 20, bomb_count = 120, score = 92
+	agent = basic, dim = 20, bomb_count = 120, score = 92
+BOMB_COUNT = 160
+	agent = basic, dim = 20, bomb_count = 160, score = 115
+	agent = basic, dim = 20, bomb_count = 160, score = 92
+	agent = basic, dim = 20, bomb_count = 160, score = 97
+	agent = basic, dim = 20, bomb_count = 160, score = 113
+	agent = basic, dim = 20, bomb_count = 160, score = 100
+	agent = basic, dim = 20, bomb_count = 160, score = 102
+	agent = basic, dim = 20, bomb_count = 160, score = 109
+	agent = basic, dim = 20, bomb_count = 160, score = 93
+	agent = basic, dim = 20, bomb_count = 160, score = 105
+	agent = basic, dim = 20, bomb_count = 160, score = 108
+BOMB_COUNT = 200
+	agent = basic, dim = 20, bomb_count = 200, score = 106
+	agent = basic, dim = 20, bomb_count = 200, score = 106
+	agent = basic, dim = 20, bomb_count = 200, score = 116
+	agent = basic, dim = 20, bomb_count = 200, score = 106
+	agent = basic, dim = 20, bomb_count = 200, score = 127
+	agent = basic, dim = 20, bomb_count = 200, score = 87
+	agent = basic, dim = 20, bomb_count = 200, score = 102
+	agent = basic, dim = 20, bomb_count = 200, score = 113
+	agent = basic, dim = 20, bomb_count = 200, score = 108
+	agent = basic, dim = 20, bomb_count = 200, score = 118
+BOMB_COUNT = 240
+	agent = basic, dim = 20, bomb_count = 240, score = 110
+	agent = basic, dim = 20, bomb_count = 240, score = 101
+	agent = basic, dim = 20, bomb_count = 240, score = 109
+	agent = basic, dim = 20, bomb_count = 240, score = 115
+	agent = basic, dim = 20, bomb_count = 240, score = 109
+	agent = basic, dim = 20, bomb_count = 240, score = 113
+	agent = basic, dim = 20, bomb_count = 240, score = 139
+	agent = basic, dim = 20, bomb_count = 240, score = 128
+	agent = basic, dim = 20, bomb_count = 240, score = 112
+	agent = basic, dim = 20, bomb_count = 240, score = 129
+BOMB_COUNT = 280
+	agent = basic, dim = 20, bomb_count = 280, score = 107
+	agent = basic, dim = 20, bomb_count = 280, score = 114
+	agent = basic, dim = 20, bomb_count = 280, score = 122
+	agent = basic, dim = 20, bomb_count = 280, score = 134
+	agent = basic, dim = 20, bomb_count = 280, score = 106
+	agent = basic, dim = 20, bomb_count = 280, score = 109
+	agent = basic, dim = 20, bomb_count = 280, score = 119
+	agent = basic, dim = 20, bomb_count = 280, score = 125
+	agent = basic, dim = 20, bomb_count = 280, score = 140
+	agent = basic, dim = 20, bomb_count = 280, score = 121
+BOMB_COUNT = 320
+	agent = basic, dim = 20, bomb_count = 320, score = 121
+	agent = basic, dim = 20, bomb_count = 320, score = 110
+	agent = basic, dim = 20, bomb_count = 320, score = 106
+	agent = basic, dim = 20, bomb_count = 320, score = 108
+	agent = basic, dim = 20, bomb_count = 320, score = 115
+	agent = basic, dim = 20, bomb_count = 320, score = 115
+	agent = basic, dim = 20, bomb_count = 320, score = 95
+	agent = basic, dim = 20, bomb_count = 320, score = 125
+	agent = basic, dim = 20, bomb_count = 320, score = 118
+	agent = basic, dim = 20, bomb_count = 320, score = 130
+BOMB_COUNT = 360
+	agent = basic, dim = 20, bomb_count = 360, score = 108
+	agent = basic, dim = 20, bomb_count = 360, score = 65
+	agent = basic, dim = 20, bomb_count = 360, score = 99
+	agent = basic, dim = 20, bomb_count = 360, score = 99
+	agent = basic, dim = 20, bomb_count = 360, score = 69
+	agent = basic, dim = 20, bomb_count = 360, score = 87
+	agent = basic, dim = 20, bomb_count = 360, score = 92
+	agent = basic, dim = 20, bomb_count = 360, score = 78
+	agent = basic, dim = 20, bomb_count = 360, score = 65
+	agent = basic, dim = 20, bomb_count = 360, score = 91
+BOMB_COUNT = 400
+	agent = basic, dim = 20, bomb_count = 400, score = 0
+	agent = basic, dim = 20, bomb_count = 400, score = 0
+	agent = basic, dim = 20, bomb_count = 400, score = 0
+	agent = basic, dim = 20, bomb_count = 400, score = 0
+	agent = basic, dim = 20, bomb_count = 400, score = 0
+	agent = basic, dim = 20, bomb_count = 400, score = 0
+	agent = basic, dim = 20, bomb_count = 400, score = 0
+	agent = basic, dim = 20, bomb_count = 400, score = 0
+	agent = basic, dim = 20, bomb_count = 400, score = 0
+	agent = basic, dim = 20, bomb_count = 400, score = 0

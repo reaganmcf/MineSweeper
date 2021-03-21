@@ -1,5 +1,121 @@
 BOMB_COUNT = 0
 	agent = advanced, dim = 20, bomb_count = 0, score = 0
+	agent = advanced, dim = 20, bomb_count = 0, score = 0
+	agent = advanced, dim = 20, bomb_count = 0, score = 0
+	agent = advanced, dim = 20, bomb_count = 0, score = 0
+	agent = advanced, dim = 20, bomb_count = 0, score = 0
+	agent = advanced, dim = 20, bomb_count = 0, score = 0
+	agent = advanced, dim = 20, bomb_count = 0, score = 0
+	agent = advanced, dim = 20, bomb_count = 0, score = 0
+	agent = advanced, dim = 20, bomb_count = 0, score = 0
+	agent = advanced, dim = 20, bomb_count = 0, score = 0
 BOMB_COUNT = 40
+	agent = advanced, dim = 20, bomb_count = 40, score = 39
+	agent = advanced, dim = 20, bomb_count = 40, score = 40
+	agent = advanced, dim = 20, bomb_count = 40, score = 40
+	agent = advanced, dim = 20, bomb_count = 40, score = 40
+	agent = advanced, dim = 20, bomb_count = 40, score = 40
+	agent = advanced, dim = 20, bomb_count = 40, score = 39
+	agent = advanced, dim = 20, bomb_count = 40, score = 38
+	agent = advanced, dim = 20, bomb_count = 40, score = 40
+	agent = advanced, dim = 20, bomb_count = 40, score = 40
 	agent = advanced, dim = 20, bomb_count = 40, score = 40
 BOMB_COUNT = 80
+	agent = advanced, dim = 20, bomb_count = 80, score = 77
+	agent = advanced, dim = 20, bomb_count = 80, score = 76
+	agent = advanced, dim = 20, bomb_count = 80, score = 76
+	agent = advanced, dim = 20, bomb_count = 80, score = 78
+	agent = advanced, dim = 20, bomb_count = 80, score = 80
+	agent = advanced, dim = 20, bomb_count = 80, score = 79
+	agent = advanced, dim = 20, bomb_count = 80, score = 77
+	agent = advanced, dim = 20, bomb_count = 80, score = 78
+	agent = advanced, dim = 20, bomb_count = 80, score = 76
+	agent = advanced, dim = 20, bomb_count = 80, score = 78
+BOMB_COUNT = 120
+	agent = advanced, dim = 20, bomb_count = 120, score = 110
+	agent = advanced, dim = 20, bomb_count = 120, score = 111
+	agent = advanced, dim = 20, bomb_count = 120, score = 102
+	agent = advanced, dim = 20, bomb_count = 120, score = 107
+	agent = advanced, dim = 20, bomb_count = 120, score = 105
+	agent = advanced, dim = 20, bomb_count = 120, score = 106
+	agent = advanced, dim = 20, bomb_count = 120, score = 98
+	agent = advanced, dim = 20, bomb_count = 120, score = 99
+	agent = advanced, dim = 20, bomb_count = 120, score = 97
+	agent = advanced, dim = 20, bomb_count = 120, score = 109
+BOMB_COUNT = 160
+	agent = advanced, dim = 20, bomb_count = 160, score = 115
+	agent = advanced, dim = 20, bomb_count = 160, score = 110
+	agent = advanced, dim = 20, bomb_count = 160, score = 116
+	agent = advanced, dim = 20, bomb_count = 160, score = 124
+	agent = advanced, dim = 20, bomb_count = 160, score = 109
+	agent = advanced, dim = 20, bomb_count = 160, score = 120
+	agent = advanced, dim = 20, bomb_count = 160, score = 128
+	agent = advanced, dim = 20, bomb_count = 160, score = 117
+	agent = advanced, dim = 20, bomb_count = 160, score = 124
+	agent = advanced, dim = 20, bomb_count = 160, score = 116
+BOMB_COUNT = 200
+	agent = advanced, dim = 20, bomb_count = 200, score = 128
+	agent = advanced, dim = 20, bomb_count = 200, score = 145
+	agent = advanced, dim = 20, bomb_count = 200, score = 116
+	agent = advanced, dim = 20, bomb_count = 200, score = 114
+	agent = advanced, dim = 20, bomb_count = 200, score = 120
+	agent = advanced, dim = 20, bomb_count = 200, score = 120
+	agent = advanced, dim = 20, bomb_count = 200, score = 135
+	agent = advanced, dim = 20, bomb_count = 200, score = 122
+	agent = advanced, dim = 20, bomb_count = 200, score = 118
+	agent = advanced, dim = 20, bomb_count = 200, score = 119
+BOMB_COUNT = 240
+	agent = advanced, dim = 20, bomb_count = 240, score = 141
+	agent = advanced, dim = 20, bomb_count = 240, score = 119
+	agent = advanced, dim = 20, bomb_count = 240, score = 123
+	agent = advanced, dim = 20, bomb_count = 240, score = 130
+	agent = advanced, dim = 20, bomb_count = 240, score = 133
+	agent = advanced, dim = 20, bomb_count = 240, score = 111
+	agent = advanced, dim = 20, bomb_count = 240, score = 106
+	agent = advanced, dim = 20, bomb_count = 240, score = 128
+	agent = advanced, dim = 20, bomb_count = 240, score = 130
+	agent = advanced, dim = 20, bomb_count = 240, score = 128
+BOMB_COUNT = 280
+	agent = advanced, dim = 20, bomb_count = 280, score = 140
+	agent = advanced, dim = 20, bomb_count = 280, score = 136
+	agent = advanced, dim = 20, bomb_count = 280, score = 136
+	agent = advanced, dim = 20, bomb_count = 280, score = 141
+	agent = advanced, dim = 20, bomb_count = 280, score = 131
+	agent = advanced, dim = 20, bomb_count = 280, score = 142
+	agent = advanced, dim = 20, bomb_count = 280, score = 105
+	agent = advanced, dim = 20, bomb_count = 280, score = 112
+	agent = advanced, dim = 20, bomb_count = 280, score = 108
+	agent = advanced, dim = 20, bomb_count = 280, score = 128
+BOMB_COUNT = 320
+	agent = advanced, dim = 20, bomb_count = 320, score = 121
+	agent = advanced, dim = 20, bomb_count = 320, score = 98
+	agent = advanced, dim = 20, bomb_count = 320, score = 86
+	agent = advanced, dim = 20, bomb_count = 320, score = 94
+	agent = advanced, dim = 20, bomb_count = 320, score = 106
+	agent = advanced, dim = 20, bomb_count = 320, score = 119
+	agent = advanced, dim = 20, bomb_count = 320, score = 122
+	agent = advanced, dim = 20, bomb_count = 320, score = 121
+	agent = advanced, dim = 20, bomb_count = 320, score = 132
+	agent = advanced, dim = 20, bomb_count = 320, score = 125
+BOMB_COUNT = 360
+	agent = advanced, dim = 20, bomb_count = 360, score = 115
+	agent = advanced, dim = 20, bomb_count = 360, score = 97
+	agent = advanced, dim = 20, bomb_count = 360, score = 101
+	agent = advanced, dim = 20, bomb_count = 360, score = 79
+	agent = advanced, dim = 20, bomb_count = 360, score = 82
+	agent = advanced, dim = 20, bomb_count = 360, score = 84
+	agent = advanced, dim = 20, bomb_count = 360, score = 91
+	agent = advanced, dim = 20, bomb_count = 360, score = 94
+	agent = advanced, dim = 20, bomb_count = 360, score = 89
+	agent = advanced, dim = 20, bomb_count = 360, score = 74
+BOMB_COUNT = 400
+	agent = advanced, dim = 20, bomb_count = 400, score = 0
+	agent = advanced, dim = 20, bomb_count = 400, score = 0
+	agent = advanced, dim = 20, bomb_count = 400, score = 0
+	agent = advanced, dim = 20, bomb_count = 400, score = 0
+	agent = advanced, dim = 20, bomb_count = 400, score = 0
+	agent = advanced, dim = 20, bomb_count = 400, score = 0
+	agent = advanced, dim = 20, bomb_count = 400, score = 0
+	agent = advanced, dim = 20, bomb_count = 400, score = 0
+	agent = advanced, dim = 20, bomb_count = 400, score = 0
+	agent = advanced, dim = 20, bomb_count = 400, score = 0
