@@ -524,16 +524,20 @@ def knows_bomb_count(board: Board) -> list:
 
 
 def not_so_random_tiles(board: Board, unfinished_tiles: list) -> BoardTile:
-    print("NOT SO RANDOM")
+    """
+    for bonus 2.
+        the tiles are given a probability of being a bomb based on the value of the equations they are in.
+        If not in any equations, they are given the prob of # mines left/ # of unopened tiles 
+     """
     all_equations = build_knowledge_base(
         board, unfinished_tiles)  # get all eqautions
     prob_of_bomb = dict()  # use a dict for
+    # give each var in a eq the prob of it being one in that eq
     for eq in all_equations:
         for var in eq[0].free_symbols:
             tile = SYMBOL_TO_TILE[var]
             prob_of_bomb[tile] = prob_of_bomb.get(
                 var, 0) + (eq[1]/len(eq[0].free_symbols))
-
     # get number of mines left on board to determine prob of mines
     # get number of unopened tiles
     mine_count = board.bomb_count
@@ -559,4 +563,5 @@ def not_so_random_tiles(board: Board, unfinished_tiles: list) -> BoardTile:
     if not prob_of_bomb:
         return None
     else:
+        # return min val in dict
         return min(prob_of_bomb, key=prob_of_bomb.get)
