@@ -27,15 +27,15 @@ Knowledge Base:
 SYMBOL_TO_TILE = dict()
 
 
-def start_outside(board: Board, agent: Agent, use_stepping: bool = False, lock_boolean=None, hyper_advanced: bool = False, bonus1: bool = False):
+def start_outside(board: Board, agent: Agent, use_stepping: bool = False, lock_boolean=None, hyper_advanced: bool = False, bonus1: bool = False, bonus2: bool = False):
     """
     start for hyper_advanced_agent.py, bonus_1_agent.py
     """
     start(board, agent, use_stepping, lock_boolean,
-          hyper_advanced=hyper_advanced, bonus1=bonus1)
+          hyper_advanced=hyper_advanced, bonus1=bonus1, bonus2=bonus2)
 
 
-def start(board: Board, agent: Agent, use_stepping: bool = False, lock_boolean=None, hyper_advanced: bool = False, bonus1: bool = False):
+def start(board: Board, agent: Agent, use_stepping: bool = False, lock_boolean=None, hyper_advanced: bool = False, bonus1: bool = False, bonus2: bool = False):
     """
     Start the advanced agent
     """
@@ -70,7 +70,15 @@ def start(board: Board, agent: Agent, use_stepping: bool = False, lock_boolean=N
                 print("infrence worked")
             if not information_learned:
                 print("infrence failed")
-                random_tile = random_tile_to_open(board)
+                random_tile = None
+                if bonus2:
+                    random_tile = not_so_random_tiles(
+                        board=board, unfinished_tiles=unfinished_tiles)
+                else:
+                    random_tile = random_tile_to_open(board)
+                # if not random_tile:
+                #     random_tile = random_tile_to_open(board)
+
                 # ends the game, no tiles remaining to open
                 if not random_tile:
                     print("GAME OVER, score=", board.get_score())
@@ -516,7 +524,7 @@ def knows_bomb_count(board: Board) -> list:
 
 
 def not_so_random_tiles(board: Board, unfinished_tiles: list) -> BoardTile:
-
+    print("NOT SO RANDOM")
     all_equations = build_knowledge_base(
         board, unfinished_tiles)  # get all eqautions
     prob_of_bomb = dict()  # use a dict for
@@ -539,15 +547,16 @@ def not_so_random_tiles(board: Board, unfinished_tiles: list) -> BoardTile:
                     mine_count -= 1
                 if tile.is_opened:
                     num_unopened -= 1
-
+    if num_unopened == 0:
+        return
     prob_uninformed = mine_count/num_unopened  # prob that tile is a mine
     # for all unopened/unflagged tiles that are not in the dict, add them
     for tilelist in board.tiles:
         for tile in tilelist:
             if tile.is_flagged or tile.is_opened or tile in prob_of_bomb:
                 continue
-            prob_of_bomb[tile] = prob_of_bomb.get(var, 0) + prob_uninformed
-    if len(prob_of_bomb.keys) == 0:
+            prob_of_bomb[tile] = prob_of_bomb.get(tile, 0) + prob_uninformed
+    if not prob_of_bomb:
         return None
     else:
         return min(prob_of_bomb, key=prob_of_bomb.get)

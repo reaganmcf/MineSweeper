@@ -7,7 +7,7 @@ from pygame.locals import QUIT
 from game.core.constants import DEFAULT_DIM, DEFAULT_BOMB_COUNT, GAME_STATE, WINDOW_WIDTH, WINDOW_HEIGHT, BACKGROUND_COLOR
 from game.board_utils.board import Board
 from game.core.agent import Agent
-from game.ai_utils import advanced_agent, basic_agent, bonus_1_agent, hyper_advanced_agent
+from game.ai_utils import advanced_agent, basic_agent, bonus_1_agent, hyper_advanced_agent, bonus_2_agent
 from game.boolean_reference import BooleanReference
 
 # Arguments
@@ -19,7 +19,7 @@ parser.add_argument(
     "--bomb_count", help="number of bombs to be placed randomly in the grid", required=True, default=DEFAULT_BOMB_COUNT, type=int)
 
 parser.add_argument(
-    "--agent", help="Which agent to use", required=True, choices=["basic", "advanced", "hyper_advanced", "bonus_1", "none"], type=str)
+    "--agent", help="Which agent to use", required=True, choices=["basic", "advanced", "hyper_advanced", "bonus_1", "bonus_2", "none"], type=str)
 
 parser.add_argument(
     "--use_stepping", help="DEBUG: Wait for keypress between agent events?", type=bool, default=False)
@@ -77,6 +77,11 @@ elif args.agent == "bonus_1":
     bonus_1_ai_thread = Thread(
         target=bonus_1_agent.start, args=(board, agent, use_stepping, lock_boolean))
     bonus_1_ai_thread.start()
+elif args.agent == "bonus_2":
+    print("Using Bonus 2 Advanced AI agent - manual mode disabled")
+    bonus_2_ai_thread = Thread(
+        target=bonus_2_agent.start, args=(board, agent, use_stepping, lock_boolean))
+    bonus_2_ai_thread.start()
 elif args.agent == "none":
     print("No agent being used - manual mode enabled")
 else:

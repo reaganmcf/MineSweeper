@@ -1,0 +1,121 @@
+BOMB_COUNT = 0
+	agent = bonus_2, dim = 20, bomb_count = 0, score = 0
+	agent = bonus_2, dim = 20, bomb_count = 0, score = 0
+	agent = bonus_2, dim = 20, bomb_count = 0, score = 0
+	agent = bonus_2, dim = 20, bomb_count = 0, score = 0
+	agent = bonus_2, dim = 20, bomb_count = 0, score = 0
+	agent = bonus_2, dim = 20, bomb_count = 0, score = 0
+	agent = bonus_2, dim = 20, bomb_count = 0, score = 0
+	agent = bonus_2, dim = 20, bomb_count = 0, score = 0
+	agent = bonus_2, dim = 20, bomb_count = 0, score = 0
+	agent = bonus_2, dim = 20, bomb_count = 0, score = 0
+BOMB_COUNT = 40
+	agent = bonus_2, dim = 20, bomb_count = 40, score = 40
+	agent = bonus_2, dim = 20, bomb_count = 40, score = 40
+	agent = bonus_2, dim = 20, bomb_count = 40, score = 40
+	agent = bonus_2, dim = 20, bomb_count = 40, score = 39
+	agent = bonus_2, dim = 20, bomb_count = 40, score = 40
+	agent = bonus_2, dim = 20, bomb_count = 40, score = 40
+	agent = bonus_2, dim = 20, bomb_count = 40, score = 40
+	agent = bonus_2, dim = 20, bomb_count = 40, score = 40
+	agent = bonus_2, dim = 20, bomb_count = 40, score = 40
+	agent = bonus_2, dim = 20, bomb_count = 40, score = 40
+BOMB_COUNT = 80
+	agent = bonus_2, dim = 20, bomb_count = 80, score = 78
+	agent = bonus_2, dim = 20, bomb_count = 80, score = 80
+	agent = bonus_2, dim = 20, bomb_count = 80, score = 79
+	agent = bonus_2, dim = 20, bomb_count = 80, score = 77
+	agent = bonus_2, dim = 20, bomb_count = 80, score = 79
+	agent = bonus_2, dim = 20, bomb_count = 80, score = 79
+	agent = bonus_2, dim = 20, bomb_count = 80, score = 80
+	agent = bonus_2, dim = 20, bomb_count = 80, score = 78
+	agent = bonus_2, dim = 20, bomb_count = 80, score = 80
+	agent = bonus_2, dim = 20, bomb_count = 80, score = 80
+BOMB_COUNT = 120
+	agent = bonus_2, dim = 20, bomb_count = 120, score = 110
+	agent = bonus_2, dim = 20, bomb_count = 120, score = 113
+	agent = bonus_2, dim = 20, bomb_count = 120, score = 106
+	agent = bonus_2, dim = 20, bomb_count = 120, score = 103
+	agent = bonus_2, dim = 20, bomb_count = 120, score = 114
+	agent = bonus_2, dim = 20, bomb_count = 120, score = 110
+	agent = bonus_2, dim = 20, bomb_count = 120, score = 106
+	agent = bonus_2, dim = 20, bomb_count = 120, score = 108
+	agent = bonus_2, dim = 20, bomb_count = 120, score = 107
+	agent = bonus_2, dim = 20, bomb_count = 120, score = 110
+BOMB_COUNT = 160
+	agent = bonus_2, dim = 20, bomb_count = 160, score = 131
+	agent = bonus_2, dim = 20, bomb_count = 160, score = 131
+	agent = bonus_2, dim = 20, bomb_count = 160, score = 128
+	agent = bonus_2, dim = 20, bomb_count = 160, score = 124
+	agent = bonus_2, dim = 20, bomb_count = 160, score = 128
+	agent = bonus_2, dim = 20, bomb_count = 160, score = 128
+	agent = bonus_2, dim = 20, bomb_count = 160, score = 132
+	agent = bonus_2, dim = 20, bomb_count = 160, score = 127
+	agent = bonus_2, dim = 20, bomb_count = 160, score = 122
+	agent = bonus_2, dim = 20, bomb_count = 160, score = 129
+BOMB_COUNT = 200
+	agent = bonus_2, dim = 20, bomb_count = 200, score = 139
+	agent = bonus_2, dim = 20, bomb_count = 200, score = 121
+	agent = bonus_2, dim = 20, bomb_count = 200, score = 151
+	agent = bonus_2, dim = 20, bomb_count = 200, score = 141
+	agent = bonus_2, dim = 20, bomb_count = 200, score = 135
+	agent = bonus_2, dim = 20, bomb_count = 200, score = 146
+	agent = bonus_2, dim = 20, bomb_count = 200, score = 134
+	agent = bonus_2, dim = 20, bomb_count = 200, score = 144
+	agent = bonus_2, dim = 20, bomb_count = 200, score = 151
+	agent = bonus_2, dim = 20, bomb_count = 200, score = 140
+BOMB_COUNT = 240
+	agent = bonus_2, dim = 20, bomb_count = 240, score = 154
+	agent = bonus_2, dim = 20, bomb_count = 240, score = 135
+	agent = bonus_2, dim = 20, bomb_count = 240, score = 163
+	agent = bonus_2, dim = 20, bomb_count = 240, score = 159
+	agent = bonus_2, dim = 20, bomb_count = 240, score = 136
+	agent = bonus_2, dim = 20, bomb_count = 240, score = 141
+	agent = bonus_2, dim = 20, bomb_count = 240, score = 163
+	agent = bonus_2, dim = 20, bomb_count = 240, score = 136
+	agent = bonus_2, dim = 20, bomb_count = 240, score = 146
+	agent = bonus_2, dim = 20, bomb_count = 240, score = 142
+BOMB_COUNT = 280
+	agent = bonus_2, dim = 20, bomb_count = 280, score = 150
+	agent = bonus_2, dim = 20, bomb_count = 280, score = 138
+	agent = bonus_2, dim = 20, bomb_count = 280, score = 138
+	agent = bonus_2, dim = 20, bomb_count = 280, score = 131
+	agent = bonus_2, dim = 20, bomb_count = 280, score = 135
+	agent = bonus_2, dim = 20, bomb_count = 280, score = 142
+	agent = bonus_2, dim = 20, bomb_count = 280, score = 161
+	agent = bonus_2, dim = 20, bomb_count = 280, score = 136
+	agent = bonus_2, dim = 20, bomb_count = 280, score = 150
+	agent = bonus_2, dim = 20, bomb_count = 280, score = 122
+BOMB_COUNT = 320
+	agent = bonus_2, dim = 20, bomb_count = 320, score = 134
+	agent = bonus_2, dim = 20, bomb_count = 320, score = 137
+	agent = bonus_2, dim = 20, bomb_count = 320, score = 129
+	agent = bonus_2, dim = 20, bomb_count = 320, score = 136
+	agent = bonus_2, dim = 20, bomb_count = 320, score = 126
+	agent = bonus_2, dim = 20, bomb_count = 320, score = 137
+	agent = bonus_2, dim = 20, bomb_count = 320, score = 131
+	agent = bonus_2, dim = 20, bomb_count = 320, score = 143
+	agent = bonus_2, dim = 20, bomb_count = 320, score = 125
+	agent = bonus_2, dim = 20, bomb_count = 320, score = 135
+BOMB_COUNT = 360
+	agent = bonus_2, dim = 20, bomb_count = 360, score = 114
+	agent = bonus_2, dim = 20, bomb_count = 360, score = 81
+	agent = bonus_2, dim = 20, bomb_count = 360, score = 116
+	agent = bonus_2, dim = 20, bomb_count = 360, score = 97
+	agent = bonus_2, dim = 20, bomb_count = 360, score = 101
+	agent = bonus_2, dim = 20, bomb_count = 360, score = 80
+	agent = bonus_2, dim = 20, bomb_count = 360, score = 83
+	agent = bonus_2, dim = 20, bomb_count = 360, score = 111
+	agent = bonus_2, dim = 20, bomb_count = 360, score = 108
+	agent = bonus_2, dim = 20, bomb_count = 360, score = 108
+BOMB_COUNT = 400
+	agent = bonus_2, dim = 20, bomb_count = 400, score = 0
+	agent = bonus_2, dim = 20, bomb_count = 400, score = 0
+	agent = bonus_2, dim = 20, bomb_count = 400, score = 0
+	agent = bonus_2, dim = 20, bomb_count = 400, score = 0
+	agent = bonus_2, dim = 20, bomb_count = 400, score = 0
+	agent = bonus_2, dim = 20, bomb_count = 400, score = 0
+	agent = bonus_2, dim = 20, bomb_count = 400, score = 0
+	agent = bonus_2, dim = 20, bomb_count = 400, score = 0
+	agent = bonus_2, dim = 20, bomb_count = 400, score = 0
+	agent = bonus_2, dim = 20, bomb_count = 400, score = 0
