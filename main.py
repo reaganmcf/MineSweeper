@@ -7,7 +7,7 @@ from pygame.locals import QUIT
 from game.core.constants import DEFAULT_DIM, DEFAULT_BOMB_COUNT, GAME_STATE, WINDOW_WIDTH, WINDOW_HEIGHT, BACKGROUND_COLOR
 from game.board_utils.board import Board
 from game.core.agent import Agent
-from game.ai_utils import advanced_agent, basic_agent, hyper_advanced_agent
+from game.ai_utils import advanced_agent, basic_agent, bonus_1_agent, hyper_advanced_agent
 from game.boolean_reference import BooleanReference
 
 # Arguments
@@ -19,7 +19,7 @@ parser.add_argument(
     "--bomb_count", help="number of bombs to be placed randomly in the grid", required=True, default=DEFAULT_BOMB_COUNT, type=int)
 
 parser.add_argument(
-    "--agent", help="Which agent to use", required=True, choices=["basic", "advanced", "hyper_advanced", "none"], type=str)
+    "--agent", help="Which agent to use", required=True, choices=["basic", "advanced", "hyper_advanced", "bonus_1", "none"], type=str)
 
 parser.add_argument(
     "--use_stepping", help="DEBUG: Wait for keypress between agent events?", type=bool, default=False)
@@ -59,7 +59,8 @@ advanced_ai_thread = None
 hyper_advanced_ai_thread = None
 if args.agent == "basic":
     print("Using AI agent - manual mode disabled")
-    basic_ai_thread = Thread(target=basic_agent.start, args=(board, agent, use_stepping, lock_boolean))
+    basic_ai_thread = Thread(target=basic_agent.start, args=(
+        board, agent, use_stepping, lock_boolean))
     basic_ai_thread.start()
 elif args.agent == "advanced":
     print("Using Advanced AI agent - manual mode disabled")
@@ -71,6 +72,11 @@ elif args.agent == "hyper_advanced":
     hyper_advanced_ai_thread = Thread(
         target=hyper_advanced_agent.start, args=(board, agent, use_stepping, lock_boolean))
     hyper_advanced_ai_thread.start()
+elif args.agent == "bonus_1":
+    print("Using Bonus 1 Advanced AI agent - manual mode disabled")
+    bonus_1_ai_thread = Thread(
+        target=bonus_1_agent.start, args=(board, agent, use_stepping, lock_boolean))
+    bonus_1_ai_thread.start()
 elif args.agent == "none":
     print("No agent being used - manual mode enabled")
 else:
@@ -89,14 +95,15 @@ while board.game_state != GAME_STATE.STOPPED:
                 advanced_ai_thread.join()
             if hyper_advanced_ai_thread != None:
                 hyper_advanced_ai_thread.join()
-        
+
         # there are 2 userevents that get sent - 1 is a re-render event
         # and the other is the game score event after the agent is finished
         elif event.type == pygame.USEREVENT and not hasattr(event, "render"):
-            print(f"agent = {args.agent}, dim = {args.dim}, bomb_count = {args.bomb_count}, score = {event.score}")
+            print(
+                f"agent = {args.agent}, dim = {args.dim}, bomb_count = {args.bomb_count}, score = {event.score}")
             if args.quit_when_finished:
                 pygame.event.post(pygame.event.Event(pygame.QUIT))
-            
+
         # Keyboard Press Events
         elif event.type == pygame.KEYDOWN:
             if event.key == pygame.K_n:
@@ -127,7 +134,7 @@ while board.game_state != GAME_STATE.STOPPED:
         elif event.type == pygame.KEYUP:
             # turn off debug commands
             dbg_show_bombs = False
-        
+
         # rendering stuff
         board.screen.fill(BACKGROUND_COLOR)
         board.draw(dbg_show_bombs=dbg_show_bombs)

@@ -1,3 +1,5 @@
+from enum import Flag
+from os import EX_PROTOCOL
 import pygame
 import numpy as np
 from sympy import Symbol, linsolve, linear_eq_to_matrix, solveset, FiniteSet, Eq, S, symbols, simplify, solve, And, satisfiable, Or
@@ -25,14 +27,15 @@ Knowledge Base:
 SYMBOL_TO_TILE = dict()
 
 
-def start_outside(board: Board, agent: Agent, use_stepping: bool = False, lock_boolean=None):
+def start_outside(board: Board, agent: Agent, use_stepping: bool = False, lock_boolean=None, hyper_advanced: bool = False, bonus1: bool = False):
     """
-    start for hyper_advanced_agent.py
+    start for hyper_advanced_agent.py, bonus_1_agent.py
     """
-    start(board, agent, use_stepping, lock_boolean, True)
+    start(board, agent, use_stepping, lock_boolean,
+          hyper_advanced=hyper_advanced, bonus1=bonus1)
 
 
-def start(board: Board, agent: Agent, use_stepping: bool = False, lock_boolean=None, hyper_advanced: bool = False):
+def start(board: Board, agent: Agent, use_stepping: bool = False, lock_boolean=None, hyper_advanced: bool = False, bonus1: bool = False):
     """
     Start the advanced agent
     """
@@ -53,8 +56,7 @@ def start(board: Board, agent: Agent, use_stepping: bool = False, lock_boolean=N
     while(not agent_done):
         time.sleep(0.03)
         # force re-render
-        pygame.event.post(pygame.event.Event(pygame.USEREVENT, render=True)) 
-       
+        pygame.event.post(pygame.event.Event(pygame.USEREVENT, render=True))
 
         # if use_stepping is enabled, then we want to skip render / logic
         if use_stepping:
@@ -63,7 +65,7 @@ def start(board: Board, agent: Agent, use_stepping: bool = False, lock_boolean=N
 
         if not tiles_to_open:  # if the list to open new tiles is empty, then we must choose a new tile to get more information
             information_learned = inference(
-                board=board, unfinished_tiles=unfinished_tiles, tiles_to_open=tiles_to_open, hyper_advanced=hyper_advanced)
+                board=board, unfinished_tiles=unfinished_tiles, tiles_to_open=tiles_to_open, hyper_advanced=hyper_advanced, knows_num_mines=bonus1)
             if information_learned:
                 print("infrence worked")
             if not information_learned:
@@ -72,7 +74,8 @@ def start(board: Board, agent: Agent, use_stepping: bool = False, lock_boolean=N
                 # ends the game, no tiles remaining to open
                 if not random_tile:
                     print("GAME OVER, score=", board.get_score())
-                    pygame.event.post(pygame.event.Event(pygame.USEREVENT, score=board.get_score()))
+                    pygame.event.post(pygame.event.Event(
+                        pygame.USEREVENT, score=board.get_score()))
                     return board.get_score()
                 tiles_to_open.append(random_tile)
 
@@ -104,8 +107,6 @@ def start(board: Board, agent: Agent, use_stepping: bool = False, lock_boolean=N
 
         if use_stepping:
             lock_boolean.set(True)
-
-
 
 
 def gen_symbol_to_tile(board: Board):
@@ -147,45 +148,49 @@ def build_knowledge_base(board: Board, unfinished_tiles: list) -> list:
         # index = len(all_equations)-1
         # for neighbors in unopened_neighbors:
         #     knowledge_base[neighbors.get_symbol].append(all_equations[index])
-    # sort the equations by size so when we do subset reduction, we do not miss anything
-    all_equations = sorted(all_equations, key=lambda x: len(x[0].free_symbols))
-    all_equations.reverse()
 
     return all_equations
 
 
-def inference(board: Board, unfinished_tiles: list, tiles_to_open: list, hyper_advanced: bool):
+def inference(board: Board, unfinished_tiles: list, tiles_to_open: list, hyper_advanced: bool, knows_num_mines: bool = False):
     all_equations = build_knowledge_base(
         board=board, unfinished_tiles=unfinished_tiles)
-    # print("kb built")
+
+    if knows_num_mines:  # BONUS 1
+        all_equations.append(knows_bomb_count(board=board))
+
+    # sort the equations by size (big -> little) so when we do subset reduction, we do not miss anything
+    all_equations = sorted(all_equations, key=lambda x: len(x[0].free_symbols))
+    all_equations.reverse()
 
     new_info_learned = False
     subset_reduction(all_equations=all_equations, tiles_to_open=tiles_to_open)
-    # print("subset reduced")
-    # for eq in all_equations:
-    #     print(eq)
+
     new_info_learned = simplify_known_equations(all_equations=all_equations,
                                                 tiles_to_open=tiles_to_open)
-    #print("simplify 1")
+
     if new_info_learned:  # early termination, dont waste time on unnessary inferences that can be easily found a few steps down the line
         return True
     new_info_learned = double_inference(
         all_equations=all_equations, tiles_to_open=tiles_to_open)
-    #print("double inference")
+
     if new_info_learned:
         return True
     new_info_learned = simplify_known_equations(all_equations=all_equations,
                                                 tiles_to_open=tiles_to_open)
-    #print("simplify 2")
+
     if new_info_learned:
         return True
+
     if not hyper_advanced:
         return new_info_learned
+
     new_info_learned = proof_by_contradiction(
         all_equations=all_equations, tiles_to_open=tiles_to_open)
+
     if new_info_learned:
         print("!!!PROOF FOUND SOMETHING!!!")
-    #print("proof by contradiction")
+
     return new_info_learned
 
 
@@ -486,3 +491,25 @@ def double_inference_inconsistency(all_equations: list):
                 return True
 
     return False
+
+
+def knows_bomb_count(board: Board) -> list:
+    '''
+    For bonus 1, add an equation for known amount of bombs
+    '''
+    mine_count = board.bomb_count
+    # Go through board, and add unopend & unflagged tiles to equation
+    x = symbols('x')  # placehoalder to make eq
+    expr = x  # init expr
+    for tilelist in board.tiles:
+        for tile in tilelist:
+
+            if tile.is_flagged:  # if flagged decrease mine count
+                mine_count -= 1
+            elif tile.is_opened:  # if opened dont add to eq
+                if tile.type == TILES.MINE:  # if open and mine, decrease mine count
+                    mine_count -= 1
+            else:
+                expr += tile.get_symbol()
+    expr -= x  # remove placeholder
+    return [expr, mine_count]
