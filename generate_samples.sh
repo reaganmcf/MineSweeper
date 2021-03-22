@@ -26,6 +26,10 @@ if [ -f "$HYPER_ADVANCED_OUTPUT" ]; then
   echo "$HYPER_ADVANCED_OUTPUT already exists, so removing it."
   rm "$HYPER_ADVANCED_OUTPUT"
 fi
+if [-f "$BONUS1_OUTPUT" ]; then
+  echo "$BONUS1_OUTPUT already exists, so removing it."
+  rm "$BONUS1_OUTPUT"
+fi
 
 echo -ne "Basic Agent Progress: (0%)\r"
 #BASIC AGENT
@@ -73,6 +77,23 @@ do
     echo -e "\t$(eval $curr_cmd | grep -i "agent = ")" >> $HYPER_ADVANCED_OUTPUT
   done
   echo -ne "Hyper Advanced Agent Progress: ($(expr $(expr 1 + $density) \* 10)%)\r"
+done
+
+echo "$BONUS1_OUTPUT"
+echo -e "\n"
+echo -ne "Bonus 1 Agent Progress: (0%)\r"
+# HYPER ADVANCED AGENT
+for density in {0..10}
+do
+  bomb_count=$(expr $density \* $BOMBS_FOR_EVERY_10_PERCENT)
+  echo "BOMB_COUNT = $bomb_count" >> $BONUS1_OUTPUT
+  for sample_num in $( eval echo {1..$SAMPLES_PER_BOMB_COUNT} )
+  do
+    curr_cmd="python3 main.py --dim $DIM --bomb_count $bomb_count --agent bonus_1 --quit_when_finished True"
+    #"agent = " only appears in the line that contains the summary (the only part we are interested in)
+    echo -e "\t$(eval $curr_cmd | grep -i "agent = ")" >> $BONUS1_OUTPUT
+  done
+  echo -ne "Bonus 1 Agent Progress: ($(expr $(expr 1 + $density) \* 10)%)\r"
 done
 
 
