@@ -54,9 +54,9 @@ def start(board: Board, agent: Agent, use_stepping: bool = False, lock_boolean=N
     unfinished_tiles = []
 
     while(not agent_done):
-        time.sleep(0.03)
+        # time.sleep(0.03)
         # force re-render
-        pygame.event.post(pygame.event.Event(pygame.USEREVENT, render=True))
+        # pygame.event.post(pygame.event.Event(pygame.USEREVENT, render=True))
 
         # if use_stepping is enabled, then we want to skip render / logic
         if use_stepping:
@@ -513,3 +513,41 @@ def knows_bomb_count(board: Board) -> list:
                 expr += tile.get_symbol()
     expr -= x  # remove placeholder
     return [expr, mine_count]
+
+
+def not_so_random_tiles(board: Board, unfinished_tiles: list) -> BoardTile:
+
+    all_equations = build_knowledge_base(
+        board, unfinished_tiles)  # get all eqautions
+    prob_of_bomb = dict()  # use a dict for
+    for eq in all_equations:
+        for var in eq[0].free_symbols:
+            tile = SYMBOL_TO_TILE[var]
+            prob_of_bomb[tile] = prob_of_bomb.get(
+                var, 0) + (eq[1]/len(eq[0].free_symbols))
+
+    # get number of mines left on board to determine prob of mines
+    # get number of unopened tiles
+    mine_count = board.bomb_count
+    num_unopened = (board.dim)**2
+    for tilelist in board.tiles:
+        for tile in tilelist:
+            if tile.is_flagged or tile.is_opened:
+                if tile.is_flagged:
+                    mine_count -= 1
+                if tile.is_opened and tile.type == TILES.MINE:
+                    mine_count -= 1
+                if tile.is_opened:
+                    num_unopened -= 1
+
+    prob_uninformed = mine_count/num_unopened  # prob that tile is a mine
+    # for all unopened/unflagged tiles that are not in the dict, add them
+    for tilelist in board.tiles:
+        for tile in tilelist:
+            if tile.is_flagged or tile.is_opened or tile in prob_of_bomb:
+                continue
+            prob_of_bomb[tile] = prob_of_bomb.get(var, 0) + prob_uninformed
+    if len(prob_of_bomb.keys) == 0:
+        return None
+    else:
+        return min(prob_of_bomb, key=prob_of_bomb.get)
