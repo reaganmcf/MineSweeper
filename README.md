@@ -1,7 +1,11 @@
 # MineSweeper
-Logic based AI Algorithms to solve MineSweeper
-
-![](./minesweeper.gif)
+<p align="center">
+  <img src="./minesweeper.gif"/>
+</p>
+<p align="center">
+    Logic based AI Algorithms to solve MineSweeper
+</p>
+<!--![](./minesweeper.gif) -->
 
 ## Usage
 
